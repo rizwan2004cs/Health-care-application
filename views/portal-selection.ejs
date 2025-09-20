@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Selection - Health Connect</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="portal-selection-container">
+        <!-- Flash Messages -->
+        <% if (typeof successMessage !== 'undefined' && successMessage) { %>
+            <div class="alert alert-success flash-message" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1000; max-width: 400px;">
+                <i class="fas fa-check-circle me-2"></i>
+                <%= successMessage %>
+            </div>
+        <% } %>
+    
+    <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+        <div class="alert alert-danger flash-message" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1000; max-width: 400px;">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <%= errorMessage %>
+        </div>
+    <% } %>
+
+    <div class="portal-header">
+        <div class="logo-section">
+            <i class="fas fa-heartbeat logo-icon"></i>
+            <h1 class="portal-title">HEALTH CONNECT</h1>
+            <p class="portal-subtitle">Your Integrated Healthcare Management Platform</p>
+        </div>
+        
+        <div class="support-links">
+            <a href="#" class="support-link">Support</a>
+            <a href="#" class="support-link">FAQ</a>
+            <a href="#" class="support-link">Request</a>
+            <a href="#" class="support-link">Contact Us</a>
+        </div>
+    </div>
+
+    <div class="portal-cards-container">
+        <div class="portal-card patient-portal" onclick="selectPortal('patient')">
+            <div class="card-icon">
+                <i class="fas fa-user-injured"></i>
+            </div>
+            <h3 class="card-title">PATIENT PORTAL</h3>
+            <p class="card-description">Access appointments, records, and medical information</p>
+        </div>
+
+        <div class="portal-card doctor-portal" onclick="selectPortal('doctor')">
+            <div class="card-icon">
+                <i class="fas fa-user-md"></i>
+            </div>
+            <h3 class="card-title">DOCTOR PORTAL</h3>
+            <p class="card-description">Manage patient cases and schedules</p>
+        </div>
+
+        <div class="portal-card admin-portal" onclick="selectPortal('admin')">
+            <div class="card-icon">
+                <i class="fas fa-cogs"></i>
+            </div>
+            <h3 class="card-title">ADMIN PANEL</h3>
+            <p class="card-description">System oversight and user management</p>
+        </div>
+    </div>
+
+    <div class="portal-features">
+        <div class="feature-item">
+            <i class="fas fa-shield-alt"></i>
+            <span>Secure & HIPAA Compliant</span>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-clock"></i>
+            <span>24/7 Access</span>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-mobile-alt"></i>
+            <span>Mobile Responsive</span>
+        </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Updated: Force refresh to ensure latest JavaScript is loaded
+        function selectPortal(portalType) {
+            // Debug: Log the portal type and new URL structure
+            console.log('Portal selected:', portalType);
+            const newUrl = '/' + portalType + '/login';
+            console.log('Redirecting to:', newUrl);
+            
+            // Redirect to specific portal login pages with new URL structure
+            window.location.href = newUrl;
+        }
+        
+        // Verify script is loaded
+        console.log('Portal selection script loaded - New URL structure active');
+        
+        // Auto-dismiss flash messages after 3 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.transition = 'opacity 0.5s ease-out';
+                    message.style.opacity = '0';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 500);
+                }, 3000); // 3 seconds delay
+            });
+        });
+    </script>
+</body>
+</html>

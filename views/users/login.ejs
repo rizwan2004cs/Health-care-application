@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Bizil Health Care</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-content">
+            <div class="brand-section">
+                <div class="brand-logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <h1 class="brand-title">Bizil Health Care</h1>
+                    <p class="brand-subtitle">Welcome back! Sign in to access your healthcare dashboard</p>
+                </div>
+                
+                <div class="brand-features">
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure & HIPAA Compliant</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-clock"></i>
+                        <span>24/7 Health Monitoring</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-user-md"></i>
+                        <span>Expert Medical Support</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Access Anywhere, Anytime</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <!-- Flash Messages -->
+                <% if (errorMessage) { %>
+                    <div class="alert alert-danger flash-message" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <%= errorMessage %>
+                    </div>
+                <% } %>
+                
+                <% if (successMessage) { %>
+                    <div class="alert alert-success flash-message" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <%= successMessage %>
+                    </div>
+                <% } %>
+                
+                <h2 class="form-title">Sign In to Your Account</h2>
+                
+                <form action="<%= typeof portal !== 'undefined' ? '/' + portal + '/login' : '/login' %>" method="post" class="needs-validation" novalidate id="loginForm">
+                    <div class="form-floating has-icon">
+                        <span class="field-icon"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" id="login" name="login" placeholder="Username or Email" required minlength="3" maxlength="50">
+                        <label for="login">Username or Email</label>
+                        <div class="invalid-feedback">Please enter a valid username or email address (minimum 3 characters).</div>
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+                    
+                    <div class="form-floating password-field has-icon">
+                        <span class="field-icon"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required minlength="6" maxlength="100">
+                        <label for="password">Password</label>
+                        <i class="fas fa-eye password-toggle" onclick="togglePassword()" aria-label="Toggle password visibility"></i>
+                        <div class="invalid-feedback">Please enter your password (minimum 6 characters).</div>
+                        <div class="valid-feedback">Password looks good!</div>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">
+                            Remember me for 30 days
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-login">
+                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                    </button>
+                    
+                    <div class="forgot-password">
+                        <a href="/forgot-password">Forgot your password?</a>
+                    </div>
+                </form>
+                
+                <% if (typeof portal !== 'undefined' && portal !== 'admin') { %>
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+                    
+                    <div class="signup-link">
+                        Don't have an account? <a href="<%= '/' + portal + '/signup' %>">Create one here</a>
+                    </div>
+                <% } else if (typeof portal === 'undefined') { %>
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+                    
+                    <div class="signup-link">
+                        Don't have an account? <a href="/signup">Create one here</a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Password visibility toggle
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.querySelector('.password-toggle');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+        
+        // Form validation
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            if (!this.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+                // Focus on first invalid field
+                const firstInvalid = this.querySelector('.form-control:invalid');
+                if (firstInvalid) {
+                    firstInvalid.focus();
+                }
+            }
+            this.classList.add('was-validated');
+        });
+        
+        // Real-time validation feedback - only show after user interaction
+        document.querySelectorAll('.form-control').forEach(input => {
+            let hasBeenTouched = false;
+            
+            input.addEventListener('focus', function() {
+                hasBeenTouched = true;
+            });
+            
+            input.addEventListener('blur', function() {
+                if (hasBeenTouched) {
+                    validateField(this);
+                }
+            });
+            
+            input.addEventListener('input', function() {
+                if (hasBeenTouched && this.classList.contains('is-invalid')) {
+                    // Only revalidate if field was previously invalid
+                    validateField(this);
+                }
+            });
+        });
+        
+        function validateField(field) {
+            // Custom validation for login field (username or email)
+            if (field.id === 'login') {
+                const value = field.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
+                
+                if (value.length === 0) {
+                    field.setCustomValidity('Please enter your username or email');
+                } else if (value.length < 3) {
+                    field.setCustomValidity('Username or email must be at least 3 characters');
+                } else if (!emailRegex.test(value) && !usernameRegex.test(value)) {
+                    field.setCustomValidity('Please enter a valid email address or username (letters, numbers, underscore only)');
+                } else {
+                    field.setCustomValidity('');
+                }
+            }
+            
+            // Update visual feedback
+            if (field.checkValidity()) {
+                field.classList.remove('is-invalid');
+                field.classList.add('is-valid');
+            } else {
+                field.classList.remove('is-valid');
+                field.classList.add('is-invalid');
+            }
+        }
+        
+        // Auto-dismiss flash messages after 3 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.transition = 'opacity 0.5s ease-out';
+                    message.style.opacity = '0';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 500);
+                }, 3000); // 3 seconds delay
+            });
+        });
+    </script>
+</body>
+</html>

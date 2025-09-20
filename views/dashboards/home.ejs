@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizil Health Care - Home</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .home-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            max-width: 800px;
+            padding: 3rem;
+            text-align: center;
+        }
+        
+        .brand-logo {
+            margin-bottom: 2rem;
+        }
+        
+        .brand-logo i {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .brand-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .brand-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 0.875rem 2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+        
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .flash-container {
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="home-container">
+            <!-- Flash Messages -->
+            <div class="flash-container">
+                <% if (successMessage) { %>
+                    <div class="alert alert-success flash-message" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <%= successMessage %>
+                        <button type="button" class="btn-close" aria-label="Close" onclick="this.parentElement.style.display='none'"></button>
+                    </div>
+                <% } %>
+                
+                <% if (errorMessage) { %>
+                    <div class="alert alert-danger flash-message" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <%= errorMessage %>
+                        <button type="button" class="btn-close" aria-label="Close" onclick="this.parentElement.style.display='none'"></button>
+                    </div>
+                <% } %>
+            </div>
+            
+            <div class="brand-logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1 class="brand-title">Bizil Health Care</h1>
+                <p class="brand-subtitle">Your trusted partner in healthcare management and wellness solutions. Experience comprehensive healthcare services with cutting-edge technology and personalized care.</p>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="/signup" class="btn btn-custom">
+                    <i class="fas fa-user-plus"></i>
+                    Get Started
+                </a>
+                <a href="/login" class="btn btn-custom btn-outline">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </a>
+                <a href="/logout" class="btn btn-custom btn-outline">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

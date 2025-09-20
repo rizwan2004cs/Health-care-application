@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Health Profile - Health Connect</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-content">
+            <div class="brand-section">
+                <div class="brand-logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <h1 class="brand-title">Health Connect</h1>
+                    <p class="brand-subtitle">Complete your health profile to get personalized care</p>
+                </div>
+                
+                <div class="brand-features">
+                    <div class="feature-item">
+                        <i class="fas fa-user-md"></i>
+                        <span>Personalized Healthcare</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-history"></i>
+                        <span>Medical History Tracking</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-bell"></i>
+                        <span>Appointment Reminders</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure & Private</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <!-- Flash Messages -->
+                <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+                    <div class="alert alert-danger flash-message" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <%= errorMessage %>
+                    </div>
+                <% } %>
+                
+                <% if (typeof successMessage !== 'undefined' && successMessage) { %>
+                    <div class="alert alert-success flash-message" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <%= successMessage %>
+                    </div>
+                <% } %>
+                
+                <h2 class="form-title">Complete Your Health Profile</h2>
+                <p class="text-muted mb-4">Help us provide you with better healthcare by sharing your health information.</p>
+                
+                <div class="profile-form">
+                    <form action="/patient/complete-profile" method="post" class="needs-validation" novalidate id="profileForm">
+                    <!-- Emergency Contact -->
+                    <h5 class="mb-3"><i class="fas fa-user-friends me-2"></i>Emergency Contact</h5>
+                    
+                    <div class="form-row">
+                        <div class="form-floating has-icon">
+                            <span class="field-icon"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control" id="emergencyName" name="emergencyContact[name]" placeholder="Contact Name" required>
+                            <label for="emergencyName">Emergency Contact Name</label>
+                            <div class="invalid-feedback">Please enter emergency contact name.</div>
+                        </div>
+                        
+                        <div class="form-floating has-icon">
+                            <span class="field-icon"><i class="fas fa-heart"></i></span>
+                            <input type="text" class="form-control" id="emergencyRelationship" name="emergencyContact[relationship]" placeholder="Relationship" required>
+                            <label for="emergencyRelationship">Relationship</label>
+                            <div class="invalid-feedback">Please enter relationship.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-floating has-icon">
+                        <span class="field-icon"><i class="fas fa-phone"></i></span>
+                        <input type="tel" class="form-control" id="emergencyPhone" name="emergencyContact[phone]" placeholder="Emergency Phone" required pattern="[0-9]{10}">
+                        <label for="emergencyPhone">Emergency Contact Phone</label>
+                        <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
+                    </div>
+                    
+                    <!-- Health Information -->
+                    <h5 class="mb-3 mt-4"><i class="fas fa-heartbeat me-2"></i>Health Information</h5>
+                    
+                    <div class="form-row">
+                        <div class="form-floating has-icon">
+                            <span class="field-icon"><i class="fas fa-tint"></i></span>
+                            <select class="form-control" id="bloodType" name="healthProfile[bloodType]">
+                                <option value="Unknown">Unknown</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                            <label for="bloodType">Blood Type</label>
+                        </div>
+                        
+                        <div class="form-floating has-icon">
+                            <span class="field-icon"><i class="fas fa-ruler-vertical"></i></span>
+                            <input type="number" class="form-control" id="height" name="healthProfile[height][value]" placeholder="Height (cm)" min="50" max="300">
+                            <label for="height">Height (cm)</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-floating has-icon">
+                        <span class="field-icon"><i class="fas fa-weight"></i></span>
+                        <input type="number" class="form-control" id="weight" name="healthProfile[weight][value]" placeholder="Weight (kg)" min="10" max="500">
+                        <label for="weight">Weight (kg)</label>
+                    </div>
+                    
+                    <!-- Allergies -->
+                    <h5 class="mb-3 mt-4"><i class="fas fa-exclamation-triangle me-2"></i>Allergies</h5>
+                    <div class="form-floating">
+                        <textarea class="form-control" id="allergies" name="allergiesText" placeholder="List any known allergies..." style="height: 100px"></textarea>
+                        <label for="allergies">Known Allergies (optional)</label>
+                    </div>
+                    
+                    <!-- Medical History -->
+                    <h5 class="mb-3 mt-4"><i class="fas fa-file-medical me-2"></i>Medical History</h5>
+                    <div class="form-floating">
+                        <textarea class="form-control" id="medicalHistory" name="medicalHistoryText" placeholder="Any chronic conditions, past surgeries, or significant medical history..." style="height: 100px"></textarea>
+                        <label for="medicalHistory">Medical History (optional)</label>
+                    </div>
+                    
+                    <!-- Lifestyle -->
+                    <h5 class="mb-3 mt-4"><i class="fas fa-running me-2"></i>Lifestyle</h5>
+                    
+                    <div class="form-row">
+                        <div class="form-floating has-icon">
+                            <span class="field-icon"><i class="fas fa-smoking"></i></span>
+                            <select class="form-control" id="smoking" name="healthProfile[lifestyle][smokingStatus]">
+                                <option value="unknown">Unknown</option>
+                                <option value="never">Never</option>
+                                <option value="former">Former Smoker</option>
+                                <option value="current">Current Smoker</option>
+                            </select>
+                            <label for="smoking">Smoking Status</label>
+                        </div>
+                        
+                        <div class="form-floating has-icon">
+                            <span class="field-icon"><i class="fas fa-wine-glass"></i></span>
+                            <select class="form-control" id="alcohol" name="healthProfile[lifestyle][alcoholConsumption]">
+                                <option value="unknown">Unknown</option>
+                                <option value="never">Never</option>
+                                <option value="occasionally">Occasionally</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="heavy">Heavy</option>
+                            </select>
+                            <label for="alcohol">Alcohol Consumption</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-floating has-icon">
+                        <span class="field-icon"><i class="fas fa-dumbbell"></i></span>
+                        <select class="form-control" id="exercise" name="healthProfile[lifestyle][exerciseFrequency]">
+                            <option value="unknown">Unknown</option>
+                            <option value="never">Never</option>
+                            <option value="rarely">Rarely</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="daily">Daily</option>
+                        </select>
+                        <label for="exercise">Exercise Frequency</label>
+                    </div>
+                    
+                    <!-- Preferences -->
+                    <h5 class="mb-3 mt-4"><i class="fas fa-cog me-2"></i>Communication Preferences</h5>
+                    
+                    <div class="form-row">
+                        <div class="form-floating has-icon">
+                            <span class="field-icon"><i class="fas fa-language"></i></span>
+                            <select class="form-control" id="language" name="preferences[preferredLanguage]">
+                                <option value="English">English</option>
+                                <option value="Hindi">Hindi</option>
+                                <option value="Telugu">Telugu</option>
+                                <option value="Tamil">Tamil</option>
+                                <option value="Bengali">Bengali</option>
+                                <option value="Marathi">Marathi</option>
+                                <option value="Gujarati">Gujarati</option>
+                                <option value="Kannada">Kannada</option>
+                                <option value="Malayalam">Malayalam</option>
+                                <option value="Punjabi">Punjabi</option>
+                                <option value="Urdu">Urdu</option>
+                            </select>
+                            <label for="language">Preferred Language</label>
+                        </div>
+                        
+                        <div class="form-floating has-icon">
+                            <span class="field-icon"><i class="fas fa-envelope"></i></span>
+                            <select class="form-control" id="communication" name="preferences[communicationMethod]">
+                                <option value="email">Email</option>
+                                <option value="sms">SMS</option>
+                                <option value="phone">Phone</option>
+                                <option value="portal">Patient Portal</option>
+                            </select>
+                            <label for="communication">Communication Method</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" id="reminders" name="preferences[appointmentReminders]" checked>
+                        <label class="form-check-label" for="reminders">
+                            Send appointment reminders
+                        </label>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="healthTips" name="preferences[healthTips]" checked>
+                        <label class="form-check-label" for="healthTips">
+                            Receive health tips and wellness information
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-signup mt-4">
+                        <i class="fas fa-check me-2"></i>Complete Profile
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-secondary w-100 mt-2" onclick="skipProfile()">
+                        Skip for Now
+                    </button>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function skipProfile() {
+            if (confirm('Are you sure you want to skip completing your health profile? You can complete it later from your dashboard.')) {
+                window.location.href = '/dashboard';
+            }
+        }
+        
+        // Form validation
+        document.getElementById('profileForm').addEventListener('submit', function(event) {
+            if (!this.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            this.classList.add('was-validated');
+        });
+        
+        // Auto-dismiss flash messages
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.transition = 'opacity 0.5s ease-out';
+                    message.style.opacity = '0';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 500);
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>
