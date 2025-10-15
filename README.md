@@ -30,13 +30,6 @@ Password: password123
 Profile: 45 years old male with Type 2 Diabetes
 ```
 
-### 🛡️ Admin Login
-```
-URL: http://localhost:8080/admin/login
-
-Email: admin@healthcare.com
-Password: (check .env file for ADMIN_PASSWORD)
-```
 
 > **Note**: All sample users have the password `password123` except admin. The database includes 5 doctors, 8 patients, 15 appointments, 8 test results, and 5 prescriptions for comprehensive testing.
 
