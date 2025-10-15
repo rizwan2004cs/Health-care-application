@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Results - Bizil Health Care</title>
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/modern-dashboard.css">
+    <style>
+        body {
+            background: #F8FAFC;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        html {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .modern-dashboard {
+            min-height: 100vh;
+            width: 100%;
+            height: auto;
+        }
+        
+        .main-content {
+            min-height: 100vh;
+            height: auto;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+            max-width: 100%;
+        }
+        
+        /* Mobile Menu Toggle Button */
+        .mobile-menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            border: 1px solid #E2E8F0;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            z-index: 1002;
+            position: relative;
+        }
+        
+        .mobile-menu-toggle:hover {
+            background: #F8FAFC;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mobile-menu-toggle i {
+            font-size: 1.25rem;
+            color: #1E293B;
+        }
+        
+        /* Mobile Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* Sidebar Mobile States */
+        .sidebar.mobile-hidden {
+            transform: translateX(-100%);
+        }
+        
+        .sidebar.mobile-visible {
+            transform: translateX(0);
+        }
+        
+        /* Test Result Card Styles */
+        .test-result-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .test-result-card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .test-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        
+        .test-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 0.25rem;
+        }
+        
+        .test-type {
+            color: #8B5CF6;
+            font-weight: 500;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-badge.completed {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+        
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+        
+        .status-badge.abnormal {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+        
+        .test-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .detail-label {
+            color: #64748B;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .detail-value {
+            color: #1E293B;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .test-results-list {
+            margin-top: 1rem;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: #F8FAFC;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-parameter {
+            font-weight: 500;
+            color: #1E293B;
+        }
+        
+        .result-value-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .result-value {
+            font-weight: 600;
+            color: #1E293B;
+        }
+        
+        .result-range {
+            font-size: 0.75rem;
+            color: #64748B;
+        }
+        
+        .result-status-icon {
+            font-size: 1rem;
+        }
+        
+        .result-status-icon.normal {
+            color: #10B981;
+        }
+        
+        .result-status-icon.abnormal {
+            color: #EF4444;
+        }
+        
+        .filter-section {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #E2E8F0;
+        }
+        
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-group label {
+            color: #64748B;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .filter-group select,
+        .filter-group input {
+            padding: 0.625rem;
+            border: 1px solid #E2E8F0;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .filter-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        
+        .btn-filter {
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-filter.primary {
+            background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+            color: white;
+        }
+        
+        .btn-filter.primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-filter.secondary {
+            background: #F1F5F9;
+            color: #64748B;
+        }
+        
+        .btn-filter.secondary:hover {
+            background: #E2E8F0;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 1.5rem;
+            border: 2px dashed #E2E8F0;
+        }
+        
+        .no-results i {
+            font-size: 4rem;
+            color: #CBD5E1;
+            margin-bottom: 1rem;
+        }
+        
+        .no-results h3 {
+            color: #1E293B;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .no-results p {
+            color: #64748B;
+            margin: 0;
+        }
+        
+        .view-details-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+            color: white;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            margin-top: 1rem;
+        }
+        
+        .view-details-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+            color: white;
+        }
+        
+        @media (max-width: 1200px) {
+            .modern-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .sidebar-overlay {
+                display: none;
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 280px;
+                height: 100vh;
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar.mobile-visible {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .test-details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-value-group {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Modern Dashboard Layout -->
+    <div class="modern-dashboard">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div>
+                    <h2 class="sidebar-title">Bizil Health</h2>
+                </div>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="/patient/dashboard" class="nav-link">
+                            <i class="fas fa-home nav-icon"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/appointments" class="nav-link">
+                            <i class="fas fa-calendar-alt nav-icon"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/search-doctors" class="nav-link">
+                            <i class="fas fa-user-md nav-icon"></i>
+                            <span>Find Doctors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/test-results" class="nav-link active">
+                            <i class="fas fa-flask nav-icon"></i>
+                            <span>Test Results</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/prescriptions" class="nav-link">
+                            <i class="fas fa-pills nav-icon"></i>
+                            <span>Prescriptions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/health-tips" class="nav-link">
+                            <i class="fas fa-lightbulb nav-icon"></i>
+                            <span>Health Tips</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/complete-profile" class="nav-link">
+                            <i class="fas fa-user-edit nav-icon"></i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" style="margin-top: 2rem;">
+                        <a href="/patient/logout" class="nav-link" style="color: #EF4444;">
+                            <i class="fas fa-sign-out-alt nav-icon"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="dashboard-header">
+                <div class="welcome-section">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div>
+                            <h1 style="margin-bottom: 0.25rem;"><i class="fas fa-flask"></i> Test Results</h1>
+                            <p style="margin: 0;">View and track your laboratory test results</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            <%= (user && user.username) ? user.username.charAt(0).toUpperCase() : 'P' %>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name"><%= (user && user.username) ? user.username : 'Patient' %></div>
+                            <div class="user-role">Patient</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Stats Cards -->
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value"><%= stats.total %></div>
+                    <div class="stat-label">Total Tests</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value"><%= stats.completed %></div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon pink">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value"><%= stats.pending %></div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon teal">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value"><%= stats.abnormal %></div>
+                    <div class="stat-label">Abnormal</div>
+                </div>
+            </div>
+            
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <h3 style="margin: 0 0 0.5rem 0; color: #1E293B; font-size: 1.125rem;"><i class="fas fa-filter"></i> Filter Results</h3>
+                <form method="GET" action="/patient/test-results">
+                    <div class="filter-grid">
+                        <div class="filter-group">
+                            <label for="testType">Test Type</label>
+                            <select name="testType" id="testType">
+                                <option value="all" <%= filters.testType === 'all' ? 'selected' : '' %>>All Types</option>
+                                <% if (testTypes && testTypes.length > 0) { %>
+                                    <% testTypes.forEach(type => { %>
+                                        <option value="<%= type %>" <%= filters.testType === type ? 'selected' : '' %>>
+                                            <%= type %>
+                                        </option>
+                                    <% }); %>
+                                <% } %>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="status">Status</label>
+                            <select name="status" id="status">
+                                <option value="all" <%= filters.status === 'all' ? 'selected' : '' %>>All Statuses</option>
+                                <option value="pending" <%= filters.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                                <option value="completed" <%= filters.status === 'completed' ? 'selected' : '' %>>Completed</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="month">Month</label>
+                            <select name="month" id="month">
+                                <option value="">All Months</option>
+                                <option value="1" <%= filters.month === '1' ? 'selected' : '' %>>January</option>
+                                <option value="2" <%= filters.month === '2' ? 'selected' : '' %>>February</option>
+                                <option value="3" <%= filters.month === '3' ? 'selected' : '' %>>March</option>
+                                <option value="4" <%= filters.month === '4' ? 'selected' : '' %>>April</option>
+                                <option value="5" <%= filters.month === '5' ? 'selected' : '' %>>May</option>
+                                <option value="6" <%= filters.month === '6' ? 'selected' : '' %>>June</option>
+                                <option value="7" <%= filters.month === '7' ? 'selected' : '' %>>July</option>
+                                <option value="8" <%= filters.month === '8' ? 'selected' : '' %>>August</option>
+                                <option value="9" <%= filters.month === '9' ? 'selected' : '' %>>September</option>
+                                <option value="10" <%= filters.month === '10' ? 'selected' : '' %>>October</option>
+                                <option value="11" <%= filters.month === '11' ? 'selected' : '' %>>November</option>
+                                <option value="12" <%= filters.month === '12' ? 'selected' : '' %>>December</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="year">Year</label>
+                            <select name="year" id="year">
+                                <option value="">All Years</option>
+                                <option value="2025" <%= filters.year === '2025' ? 'selected' : '' %>>2025</option>
+                                <option value="2024" <%= filters.year === '2024' ? 'selected' : '' %>>2024</option>
+                                <option value="2023" <%= filters.year === '2023' ? 'selected' : '' %>>2023</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-actions">
+                        <button type="submit" class="btn-filter primary">
+                            <i class="fas fa-search"></i> Apply Filters
+                        </button>
+                        <a href="/patient/test-results" class="btn-filter secondary">
+                            <i class="fas fa-times"></i> Clear Filters
+                        </a>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Test Results List -->
+            <% if (testResults && testResults.length > 0) { %>
+                <% testResults.forEach(function(test) { 
+                    const hasAbnormal = test.parameters && test.parameters.some(p => p.status !== 'normal');
+                    const statusClass = hasAbnormal ? 'abnormal' : test.status;
+                %>
+                    <div class="test-result-card">
+                        <div class="test-result-header">
+                            <div>
+                                <div class="test-name"><%= test.testName %></div>
+                                <div class="test-type"><%= test.testType %></div>
+                            </div>
+                            <span class="status-badge <%= statusClass %>">
+                                <%= hasAbnormal ? 'ABNORMAL' : test.status.toUpperCase() %>
+                            </span>
+                        </div>
+                        
+                        <div class="test-details-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">Test Date</div>
+                                <div class="detail-value">
+                                    <%= test.testDate ? new Date(test.testDate).toLocaleDateString() : 'N/A' %>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Report Date</div>
+                                <div class="detail-value">
+                                    <%= test.reportDate ? new Date(test.reportDate).toLocaleDateString() : 'Pending' %>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Doctor</div>
+                                <div class="detail-value">
+                                    <%= test.doctor ? ('Dr. ' + test.doctor.firstName + ' ' + test.doctor.lastName) : 'N/A' %>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Lab</div>
+                                <div class="detail-value"><%= test.lab || 'N/A' %></div>
+                            </div>
+                        </div>
+                        
+                        <% if (test.status === 'completed' && test.parameters && test.parameters.length > 0) { %>
+                        <div class="test-results-list">
+                            <h4 style="margin: 0 0 0.75rem 0; color: #1E293B; font-size: 1rem; font-weight: 600;">
+                                Test Parameters
+                            </h4>
+                            <% test.parameters.forEach(param => { %>
+                                <div class="result-item">
+                                    <div class="result-parameter"><%= param.name %></div>
+                                    <div class="result-value-group">
+                                        <div>
+                                            <div class="result-value"><%= param.value %> <%= param.unit || '' %></div>
+                                            <div class="result-range">Normal: <%= param.normalRange || 'N/A' %></div>
+                                        </div>
+                                        <i class="fas fa-circle-check result-status-icon <%= param.status || 'normal' %>"></i>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                        <% } %>
+                        
+                        <% if (test.notes) { %>
+                        <div style="margin-top: 1rem; padding: 1rem; background: #F8FAFC; border-radius: 0.5rem;">
+                            <div style="color: #64748B; font-size: 0.75rem; text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem;">
+                                Doctor's Notes
+                            </div>
+                            <div style="color: #1E293B; font-size: 0.875rem;">
+                                <%= test.notes %>
+                            </div>
+                        </div>
+                        <% } %>
+                        
+                        <a href="/patient/test-results/<%= test._id %>" class="view-details-btn">
+                            <i class="fas fa-eye"></i> View Full Report
+                        </a>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="no-results">
+                    <i class="fas fa-flask"></i>
+                    <h3>No Test Results Found</h3>
+                    <p>Your test results will appear here once they are available.</p>
+                </div>
+            <% } %>
+        </main>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile Menu Toggle Functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        function toggleMenu() {
+            sidebar.classList.toggle('mobile-visible');
+            sidebarOverlay.classList.toggle('active');
+            
+            const icon = mobileMenuToggle.querySelector('i');
+            if (sidebar.classList.contains('mobile-visible')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+        
+        function closeMenu() {
+            sidebar.classList.remove('mobile-visible');
+            sidebarOverlay.classList.remove('active');
+            const icon = mobileMenuToggle.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', toggleMenu);
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', closeMenu);
+        }
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 1200) {
+                    closeMenu();
+                }
+            });
+        });
+        
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1200) {
+                closeMenu();
+            }
+        });
+        
+        console.log('Test Results page loaded successfully');
+    </script>
+</body>
+</html>

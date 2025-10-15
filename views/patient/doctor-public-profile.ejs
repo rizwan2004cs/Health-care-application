@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. <%= doctor.firstName %> <%= doctor.lastName %> - Bizil Health Care</title>
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/modern-dashboard.css">
+    <style>
+        body {
+            background: #F8FAFC;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .profile-header {
+            background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .doctor-profile-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-top: -5rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .doctor-header-section {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        
+        .doctor-avatar-xl {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+        
+        .doctor-main-info {
+            flex: 1;
+        }
+        
+        .doctor-name-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+        
+        .doctor-specialty-main {
+            font-size: 1.125rem;
+            color: #8B5CF6;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .verified-badge-large {
+            background: #ECFDF5;
+            color: #059669;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .rating-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stars-large {
+            color: #F59E0B;
+            font-size: 1.25rem;
+        }
+        
+        .rating-text {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .review-count {
+            color: #6B7280;
+            font-size: 0.9375rem;
+        }
+        
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 1.5rem;
+            background: #F9FAFB;
+            border-radius: 12px;
+            border: 1px solid #E5E7EB;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 0.75rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .stat-icon.purple { background: #F3F0FF; color: #8B5CF6; }
+        .stat-icon.blue { background: #EFF6FF; color: #3B82F6; }
+        .stat-icon.green { background: #ECFDF5; color: #10B981; }
+        .stat-icon.orange { background: #FFF7ED; color: #F59E0B; }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6B7280;
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid #E5E7EB;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .section-title i {
+            color: #8B5CF6;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .info-icon.purple { background: #F3F0FF; color: #8B5CF6; }
+        .info-icon.blue { background: #EFF6FF; color: #3B82F6; }
+        .info-icon.green { background: #ECFDF5; color: #10B981; }
+        .info-icon.pink { background: #FCE7F3; color: #EC4899; }
+        
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-label {
+            font-size: 0.875rem;
+            color: #6B7280;
+            margin-bottom: 0.25rem;
+        }
+        
+        .info-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .language-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .language-tag {
+            background: #F3F0FF;
+            color: #8B5CF6;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-action {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+            justify-content: center;
+            min-width: 200px;
+        }
+        
+        .btn-action.primary {
+            background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+            color: white;
+        }
+        
+        .btn-action.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-action.secondary {
+            background: white;
+            color: #6B7280;
+            border: 2px solid #E5E7EB;
+        }
+        
+        .btn-action.secondary:hover {
+            background: #F9FAFB;
+            border-color: #8B5CF6;
+            color: #8B5CF6;
+        }
+        
+        .qualification-item {
+            padding: 1rem;
+            background: #F9FAFB;
+            border-radius: 10px;
+            border-left: 4px solid #8B5CF6;
+            margin-bottom: 1rem;
+        }
+        
+        .qualification-degree {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+        
+        .qualification-institution {
+            font-size: 0.9375rem;
+            color: #6B7280;
+        }
+        
+        .qualification-year {
+            font-size: 0.875rem;
+            color: #8B5CF6;
+            font-weight: 500;
+            margin-top: 0.25rem;
+        }
+        
+        @media (max-width: 768px) {
+            .doctor-header-section {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+            
+            .doctor-profile-card {
+                margin-top: -3rem;
+            }
+            
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn-action {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Modern Dashboard Layout -->
+    <div class="dashboard">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div>
+                    <h2 class="sidebar-title">Bizil Health</h2>
+                </div>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="/patient/dashboard" class="nav-link">
+                            <i class="fas fa-home nav-icon"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/appointments" class="nav-link">
+                            <i class="fas fa-calendar-alt nav-icon"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/search-doctors" class="nav-link">
+                            <i class="fas fa-user-md nav-icon"></i>
+                            <span>Find Doctors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/test-results" class="nav-link">
+                            <i class="fas fa-flask nav-icon"></i>
+                            <span>Test Results</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/prescriptions" class="nav-link">
+                            <i class="fas fa-pills nav-icon"></i>
+                            <span>Prescriptions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/health-tips" class="nav-link">
+                            <i class="fas fa-lightbulb nav-icon"></i>
+                            <span>Health Tips</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/complete-profile" class="nav-link">
+                            <i class="fas fa-user-edit nav-icon"></i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" style="margin-top: 2rem;">
+                        <a href="/patient/logout" class="nav-link" style="color: #EF4444;">
+                            <i class="fas fa-sign-out-alt nav-icon"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="dashboard-header">
+                <div class="welcome-section">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div>
+                            <h1 style="margin-bottom: 0.25rem;"><i class="fas fa-user-md"></i> Doctor Profile</h1>
+                            <p style="margin: 0;">View complete profile and book appointment</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            <%= (patient && patient.firstName) ? patient.firstName.charAt(0).toUpperCase() : ((user && user.username) ? user.username.charAt(0).toUpperCase() : 'P') %>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name"><%= (patient && patient.firstName) ? (patient.firstName + ' ' + (patient.lastName || '')) : ((user && user.username) ? user.username : 'Patient') %></div>
+                            <div class="user-role">Patient</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Profile Header Background -->
+            <div class="profile-header"></div>
+            
+            <!-- Doctor Profile Card -->
+            <div class="container" style="max-width: 1200px;">
+                <div class="doctor-profile-card">
+                    <div class="doctor-header-section">
+                        <div class="doctor-avatar-xl">
+                            <%= doctor.firstName.charAt(0) + doctor.lastName.charAt(0) %>
+                        </div>
+                        <div class="doctor-main-info">
+                            <h1 class="doctor-name-title">Dr. <%= doctor.firstName %> <%= doctor.lastName %></h1>
+                            <div class="doctor-specialty-main">
+                                <i class="fas fa-stethoscope"></i>
+                                <%= doctor.specialization || 'General Practice' %>
+                                <% if (doctor.subSpecialization) { %>
+                                    • <%= doctor.subSpecialization %>
+                                <% } %>
+                            </div>
+                            <% if (doctor.isVerified) { %>
+                                <span class="verified-badge-large">
+                                    <i class="fas fa-check-circle"></i>
+                                    Verified Doctor
+                                </span>
+                            <% } %>
+                            <div class="rating-section">
+                                <div class="stars-large">
+                                    <% const rating = doctor.ratings && doctor.ratings.overall ? doctor.ratings.overall : 0; %>
+                                    <% for(let i = 0; i < 5; i++) { %>
+                                        <i class="fas fa-star<%= i < Math.round(rating) ? '' : '-o' %>"></i>
+                                    <% } %>
+                                </div>
+                                <span class="rating-text"><%= rating.toFixed(1) %></span>
+                                <span class="review-count">(<%= (doctor.ratings && doctor.ratings.totalReviews) ? doctor.ratings.totalReviews : 0 %> reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="quick-stats">
+                        <% if (doctor.experience) { %>
+                        <div class="stat-box">
+                            <div class="stat-icon purple">
+                                <i class="fas fa-user-clock"></i>
+                            </div>
+                            <div class="stat-value"><%= doctor.experience %>+</div>
+                            <div class="stat-label">Years Experience</div>
+                        </div>
+                        <% } %>
+                        
+                        <% if (doctor.consultationFee && doctor.consultationFee.inPerson) { %>
+                        <div class="stat-box">
+                            <div class="stat-icon green">
+                                <i class="fas fa-rupee-sign"></i>
+                            </div>
+                            <div class="stat-value">₹<%= doctor.consultationFee.inPerson %></div>
+                            <div class="stat-label">Consultation Fee</div>
+                        </div>
+                        <% } %>
+                        
+                        <div class="stat-box">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-value"><%= (doctor.patients && doctor.patients.length) ? doctor.patients.length : '0' %>+</div>
+                            <div class="stat-label">Patients</div>
+                        </div>
+                        
+                        <div class="stat-box">
+                            <div class="stat-icon orange">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-value"><%= (doctor.appointments && doctor.appointments.length) ? doctor.appointments.length : '0' %>+</div>
+                            <div class="stat-label">Appointments</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <a href="/patient/book-appointment/<%= doctor._id %>" class="btn-action primary">
+                            <i class="fas fa-calendar-plus"></i>
+                            Book Appointment
+                        </a>
+                        <a href="/patient/search-doctors" class="btn-action secondary">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Doctors
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Professional Information -->
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-id-card"></i>
+                        Professional Information
+                    </h3>
+                    <div class="info-grid">
+                        <% if (doctor.currentHospital && doctor.currentHospital.name) { %>
+                        <div class="info-item">
+                            <div class="info-icon purple">
+                                <i class="fas fa-hospital"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Current Hospital</div>
+                                <div class="info-value"><%= doctor.currentHospital.name %></div>
+                            </div>
+                        </div>
+                        <% } %>
+                        
+                        <% if (doctor.currentHospital && doctor.currentHospital.department) { %>
+                        <div class="info-item">
+                            <div class="info-icon blue">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Department</div>
+                                <div class="info-value"><%= doctor.currentHospital.department %></div>
+                            </div>
+                        </div>
+                        <% } %>
+                        
+                        <% if (doctor.currentHospital && doctor.currentHospital.position) { %>
+                        <div class="info-item">
+                            <div class="info-icon green">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Position</div>
+                                <div class="info-value"><%= doctor.currentHospital.position %></div>
+                            </div>
+                        </div>
+                        <% } %>
+                        
+                        <% if (doctor.licenseNumber) { %>
+                        <div class="info-item">
+                            <div class="info-icon pink">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">License Number</div>
+                                <div class="info-value"><%= doctor.licenseNumber %></div>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <!-- Contact & Location -->
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Contact & Location
+                    </h3>
+                    <div class="info-grid">
+                        <% if (doctor.phone) { %>
+                        <div class="info-item">
+                            <div class="info-icon blue">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Phone</div>
+                                <div class="info-value"><%= doctor.phone %></div>
+                            </div>
+                        </div>
+                        <% } %>
+                        
+                        <% if (doctor.address && (doctor.address.city || doctor.address.state)) { %>
+                        <div class="info-item">
+                            <div class="info-icon purple">
+                                <i class="fas fa-location-dot"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Location</div>
+                                <div class="info-value">
+                                    <% if (doctor.address.city) { %><%= doctor.address.city %><% } %>
+                                    <% if (doctor.address.city && doctor.address.state) { %>, <% } %>
+                                    <% if (doctor.address.state) { %><%= doctor.address.state %><% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                        
+                        <% if (doctor.address && doctor.address.street) { %>
+                        <div class="info-item">
+                            <div class="info-icon green">
+                                <i class="fas fa-map"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Address</div>
+                                <div class="info-value"><%= doctor.address.street %></div>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <!-- Education & Qualifications -->
+                <% if (doctor.qualifications && doctor.qualifications.length > 0) { %>
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        Education & Qualifications
+                    </h3>
+                    <% doctor.qualifications.forEach(function(qual) { %>
+                        <div class="qualification-item">
+                            <div class="qualification-degree"><%= qual.degree %></div>
+                            <div class="qualification-institution"><%= qual.institution %></div>
+                            <div class="qualification-year">Graduated: <%= qual.year %></div>
+                        </div>
+                    <% }); %>
+                </div>
+                <% } %>
+                
+                <!-- Languages Spoken -->
+                <% if (doctor.languages && doctor.languages.length > 0) { %>
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-language"></i>
+                        Languages Spoken
+                    </h3>
+                    <div class="language-tags">
+                        <% doctor.languages.forEach(function(lang) { %>
+                            <span class="language-tag"><%= lang %></span>
+                        <% }); %>
+                    </div>
+                </div>
+                <% } %>
+                
+                <!-- Consultation Fees -->
+                <% if (doctor.consultationFee) { %>
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-rupee-sign"></i>
+                        Consultation Fees
+                    </h3>
+                    <div class="info-grid">
+                        <% if (doctor.consultationFee.inPerson) { %>
+                        <div class="info-item">
+                            <div class="info-icon purple">
+                                <i class="fas fa-clinic-medical"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">In-Person Consultation</div>
+                                <div class="info-value">₹<%= doctor.consultationFee.inPerson %></div>
+                            </div>
+                        </div>
+                        <% } %>
+                        
+                        <% if (doctor.consultationFee.online) { %>
+                        <div class="info-item">
+                            <div class="info-icon blue">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Online Consultation</div>
+                                <div class="info-value">₹<%= doctor.consultationFee.online %></div>
+                            </div>
+                        </div>
+                        <% } %>
+                        
+                        <% if (doctor.consultationFee.followUp) { %>
+                        <div class="info-item">
+                            <div class="info-icon green">
+                                <i class="fas fa-redo"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Follow-up Consultation</div>
+                                <div class="info-value">₹<%= doctor.consultationFee.followUp %></div>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+                <% } %>
+                
+                <!-- Bottom Action Button -->
+                <div class="section-card" style="text-align: center; background: linear-gradient(135deg, #F3F0FF, #EFF6FF);">
+                    <h3 style="margin-bottom: 1rem;">Ready to book your appointment?</h3>
+                    <p style="margin-bottom: 1.5rem; color: #6B7280;">Schedule your consultation with Dr. <%= doctor.firstName %> <%= doctor.lastName %> today</p>
+                    <a href="/patient/book-appointment/<%= doctor._id %>" class="btn-action primary" style="display: inline-flex; min-width: 300px;">
+                        <i class="fas fa-calendar-plus"></i>
+                        Book Appointment Now
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        
+        if (menuToggle) {
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.add('active');
+                if (overlay) overlay.classList.add('active');
+            });
+        }
+        
+        if (overlay) {
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+        
+        // Close mobile menu on window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 1200) {
+                sidebar.classList.remove('active');
+                if (overlay) overlay.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

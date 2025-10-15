@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Bizil Health Care</title>
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px) scale(0.5); opacity: 0; }
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 2s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 4s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 6s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 8s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 10s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 12s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 14s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 16s; }
+
+        .container-404 {
+            position: relative;
+            z-index: 2;
+            max-width: 1100px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-content {
+            flex: 1;
+        }
+
+        .error-code {
+            font-size: 5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.75rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .error-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+        }
+
+        .error-message {
+            font-size: 1rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+        }
+
+        .healthcare-tips {
+            background: #f8fafc;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .healthcare-tips h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .healthcare-tips ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .healthcare-tips li {
+            padding: 0.375rem 0;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .healthcare-tips li i {
+            color: #667eea;
+            font-size: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            font-size: 0.9375rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: 2px solid #667eea;
+            font-size: 0.9375rem;
+        }
+
+        .btn-secondary:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+        }
+
+        .illustration-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .mammoth-illustration {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            position: relative;
+            animation: float-mammoth 3s ease-in-out infinite;
+        }
+
+        @keyframes float-mammoth {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .pixel-art {
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .health-icons {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .health-icon {
+            position: absolute;
+            font-size: 2rem;
+            animation: rotate-icon 10s linear infinite;
+        }
+
+        @keyframes rotate-icon {
+            from { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+        }
+
+        .health-icon:nth-child(1) { color: #ef4444; animation-delay: 0s; }
+        .health-icon:nth-child(2) { color: #10b981; animation-delay: -2.5s; }
+        .health-icon:nth-child(3) { color: #3b82f6; animation-delay: -5s; }
+        .health-icon:nth-child(4) { color: #f59e0b; animation-delay: -7.5s; }
+
+        @media (max-width: 992px) {
+            .container-404 {
+                flex-direction: column;
+                padding: 1.5rem;
+            }
+
+            .error-code {
+                font-size: 4rem;
+            }
+
+            .error-title {
+                font-size: 1.5rem;
+            }
+
+            .illustration-container {
+                order: -1;
+            }
+
+            .mammoth-illustration {
+                max-width: 280px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 1rem 0;
+            }
+
+            .container-404 {
+                padding: 1.25rem;
+            }
+
+            .error-code {
+                font-size: 3rem;
+            }
+
+            .error-title {
+                font-size: 1.25rem;
+            }
+
+            .error-message {
+                font-size: 0.9375rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .mammoth-illustration {
+                max-width: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated particles -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="container-404">
+        <div class="error-content">
+            <div class="error-code">404</div>
+            <h1 class="error-title">Oops! Page Not Found</h1>
+            <p class="error-message">
+                The page you're looking for doesn't exist or has been moved. 
+                While you're here, let's make sure your health journey stays on track!
+            </p>
+
+            <div class="healthcare-tips">
+                <h3><i class="fas fa-heartbeat"></i> Quick Health Reminder</h3>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Stay hydrated - drink at least 8 glasses of water daily</li>
+                    <li><i class="fas fa-check-circle"></i> Schedule regular health check-ups with your doctor</li>
+                    <li><i class="fas fa-check-circle"></i> Get 7-9 hours of quality sleep every night</li>
+                    <li><i class="fas fa-check-circle"></i> Maintain a balanced diet with fruits and vegetables</li>
+                </ul>
+            </div>
+
+            <div class="action-buttons">
+                <a href="/" class="btn-primary">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+                <a href="/portal-selection" class="btn-secondary">
+                    <i class="fas fa-hospital-user"></i> Patient Portal
+                </a>
+            </div>
+        </div>
+
+        <div class="illustration-container">
+            <div class="health-icons">
+                <i class="fas fa-heartbeat health-icon"></i>
+                <i class="fas fa-notes-medical health-icon"></i>
+                <i class="fas fa-user-md health-icon"></i>
+                <i class="fas fa-pills health-icon"></i>
+            </div>
+            
+            <!-- Pixel Art Mammoth SVG -->
+            <svg class="mammoth-illustration pixel-art" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                <!-- Mammoth body -->
+                <rect x="120" y="200" width="160" height="120" fill="#E8A5A5" />
+                <rect x="100" y="220" width="20" height="80" fill="#E8A5A5" />
+                <rect x="280" y="220" width="20" height="80" fill="#E8A5A5" />
+                
+                <!-- Legs -->
+                <rect x="140" y="310" width="30" height="50" fill="#E8A5A5" />
+                <rect x="230" y="310" width="30" height="50" fill="#E8A5A5" />
+                <rect x="140" y="350" width="30" height="10" fill="#D4A5A5" />
+                <rect x="230" y="350" width="30" height="10" fill="#D4A5A5" />
+                
+                <!-- Head -->
+                <rect x="80" y="180" width="100" height="80" fill="#E8A5A5" />
+                
+                <!-- Tusks -->
+                <path d="M 80 240 Q 60 260 70 280" stroke="#F5F5DC" stroke-width="8" fill="none" />
+                <path d="M 180 240 Q 200 260 190 280" stroke="#F5F5DC" stroke-width="8" fill="none" />
+                
+                <!-- Trunk -->
+                <path d="M 130 260 L 130 300 Q 130 320 110 330 Q 90 340 100 360" stroke="#E8A5A5" stroke-width="20" fill="none" />
+                
+                <!-- Eye -->
+                <circle cx="140" cy="210" r="8" fill="#2C3E50" />
+                <circle cx="143" cy="207" r="3" fill="white" />
+                
+                <!-- Ear -->
+                <ellipse cx="180" cy="200" rx="30" ry="40" fill="#D4A5A5" />
+                
+                <!-- Hair/Fur -->
+                <rect x="100" y="170" width="60" height="15" fill="#C98686" />
+                <rect x="90" y="185" width="80" height="5" fill="#C98686" />
+                
+                <!-- 404 Sign -->
+                <rect x="200" y="280" width="120" height="60" fill="#FFF" stroke="#2C3E50" stroke-width="3" />
+                <text x="260" y="320" font-family="'Inter', monospace" font-size="36" font-weight="bold" fill="#2C3E50" text-anchor="middle">404</text>
+                
+                <!-- Sign post -->
+                <rect x="255" y="335" width="10" height="40" fill="#8B4513" />
+                
+                <!-- Ground -->
+                <rect x="0" y="370" width="400" height="30" fill="#90EE90" opacity="0.3" />
+                
+                <!-- Grass details -->
+                <path d="M 50 370 L 55 360 L 60 370" stroke="#4A7C59" stroke-width="2" fill="none" />
+                <path d="M 150 370 L 155 360 L 160 370" stroke="#4A7C59" stroke-width="2" fill="none" />
+                <path d="M 250 370 L 255 360 L 260 370" stroke="#4A7C59" stroke-width="2" fill="none" />
+                <path d="M 350 370 L 355 360 L 360 370" stroke="#4A7C59" stroke-width="2" fill="none" />
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth scroll to top functionality
+        document.querySelectorAll('a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if (this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                }
+            });
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' || e.key === 'Home') {
+                window.location.href = '/';
+            }
+        });
+    </script>
+</body>
+</html>

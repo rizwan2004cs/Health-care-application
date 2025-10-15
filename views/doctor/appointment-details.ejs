@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Details - BizilHealth Doctor Portal</title>
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/modern-dashboard.css">
+    <style>
+        :root {
+            --primary: #8B5CF6;
+            --primary-dark: #7C3AED;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+        }
+        
+        .mobile-menu-toggle {
+            display: none !important;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 997;
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 1200px) {
+            .mobile-menu-toggle {
+                display: flex !important;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 999;
+            }
+
+            .sidebar.mobile-visible {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        .appointment-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0056b3 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+        }
+
+        .appointment-header h2 {
+            margin: 0 0 0.5rem 0;
+            font-weight: 600;
+        }
+
+        .appointment-header .appointment-id {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .info-card h5 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .info-card h5 i {
+            width: 30px;
+            height: 30px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .info-row {
+            display: flex;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: #666;
+            width: 140px;
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            color: #333;
+            flex: 1;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-scheduled {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+        }
+
+        .status-confirmed {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+
+        .status-completed {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22C55E;
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .status-no-show {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+        
+        .status-rescheduled {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8B5CF6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .notes-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .notes-section textarea {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Inter', sans-serif;
+            resize: vertical;
+            min-height: 120px;
+            font-size: 0.95rem;
+        }
+        
+        .notes-section textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            border: none;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            border: none;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #D97706;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+        
+        .btn-info {
+            background: var(--info);
+            border: none;
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background: #2563EB;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .patient-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, #0056b3 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-right: 1.5rem;
+        }
+
+        .patient-info-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .patient-info-header .patient-details h4 {
+            margin: 0;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .patient-info-header .patient-details p {
+            margin: 0.25rem 0 0 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            gap: 0.75rem;
+            color: #0056b3;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-top: 1rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: #e0e0e0;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .timeline-item .timeline-time {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-item .timeline-content {
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+            }
+
+            .patient-info-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .patient-avatar {
+                margin-bottom: 1rem;
+            }
+
+            .info-row {
+                flex-direction: column;
+            }
+
+            .info-label {
+                width: 100%;
+                margin-bottom: 0.25rem;
+                font-weight: 600;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h4><i class="fas fa-user-md"></i> Doctor Portal</h4>
+            <p class="mb-0">Dr. <%= profile.firstName %> <%= profile.lastName %></p>
+            <small class="text-muted"><%= profile.specialization || 'Medical Professional' %></small>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="/doctor/dashboard" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/doctor/appointments" class="nav-link active">
+                <i class="fas fa-calendar-check"></i>
+                <span>Appointments</span>
+            </a>
+            <a href="/doctor/patients" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Patients</span>
+            </a>
+            <a href="/doctor/prescriptions" class="nav-link">
+                <i class="fas fa-prescription"></i>
+                <span>Prescriptions</span>
+            </a>
+            <a href="/doctor/schedule" class="nav-link">
+                <i class="fas fa-clock"></i>
+                <span>Schedule</span>
+            </a>
+            <a href="/profiles/doctor-profile" class="nav-link">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="/logout" class="btn btn-outline-light btn-sm w-100">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <a href="/doctor/appointments" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Appointments
+            </a>
+
+            <% if (errorMessage) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <%= errorMessage %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <% } %>
+
+            <% if (successMessage) { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <%= successMessage %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <% } %>
+
+            <!-- Appointment Header -->
+            <div class="appointment-header">
+                <h2>Appointment Details</h2>
+                <div class="appointment-id">ID: <%= appointment._id %></div>
+            </div>
+
+            <div class="row">
+                <!-- Left Column -->
+                <div class="col-lg-8">
+                    <!-- Patient Information -->
+                    <div class="info-card">
+                        <h5><i class="fas fa-user"></i> Patient Information</h5>
+                        <div class="patient-info-header">
+                            <div class="patient-avatar">
+                                <%= appointment.patient.firstName ? appointment.patient.firstName.charAt(0).toUpperCase() : 'P' %>
+                            </div>
+                            <div class="patient-details">
+                                <h4><%= appointment.patient.firstName %> <%= appointment.patient.lastName %></h4>
+                                <p>
+                                    <i class="fas fa-venus-mars"></i> <%= appointment.patient.gender || 'N/A' %> • 
+                                    <i class="fas fa-birthday-cake"></i> <%= appointment.patient.dateOfBirth ? new Date().getFullYear() - new Date(appointment.patient.dateOfBirth).getFullYear() : 'N/A' %> years
+                                </p>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Email:</div>
+                            <div class="info-value"><%= appointment.patient.user ? appointment.patient.user.email : 'N/A' %></div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Phone:</div>
+                            <div class="info-value"><%= appointment.patient.phone || 'N/A' %></div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Address:</div>
+                            <div class="info-value">
+                                <% if (appointment.patient.address) { %>
+                                    <% if (typeof appointment.patient.address === 'string') { %>
+                                        <%= appointment.patient.address %>
+                                    <% } else if (appointment.patient.address.country) { %>
+                                        <%= appointment.patient.address.country %>
+                                    <% } else { %>
+                                        N/A
+                                    <% } %>
+                                <% } else { %>
+                                    N/A
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Blood Group:</div>
+                            <div class="info-value"><%= appointment.patient.healthProfile && appointment.patient.healthProfile.bloodType ? appointment.patient.healthProfile.bloodType : 'N/A' %></div>
+                        </div>
+                    </div>
+
+                    <!-- Appointment Information -->
+                    <div class="info-card">
+                        <h5><i class="fas fa-calendar-check"></i> Appointment Information</h5>
+                        <div class="info-row">
+                            <div class="info-label">Date:</div>
+                            <div class="info-value">
+                                <strong><%= new Date(appointment.appointmentDate).toLocaleDateString('en-US', { 
+                                    weekday: 'long', 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric' 
+                                }) %></strong>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Time:</div>
+                            <div class="info-value"><strong><%= appointment.appointmentTime %></strong></div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Reason:</div>
+                            <div class="info-value"><%= appointment.reason %></div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Status:</div>
+                            <div class="info-value">
+                                <span class="status-badge status-<%= appointment.status %>">
+                                    <%= appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1) %>
+                                </span>
+                            </div>
+                        </div>
+                        <% if (appointment.type) { %>
+                        <div class="info-row">
+                            <div class="info-label">Type:</div>
+                            <div class="info-value"><%= appointment.type %></div>
+                        </div>
+                        <% } %>
+                        <div class="info-row">
+                            <div class="info-label">Booked On:</div>
+                            <div class="info-value">
+                                <%= new Date(appointment.createdAt).toLocaleString('en-US', { 
+                                    year: 'numeric', 
+                                    month: 'short', 
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                }) %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes Section -->
+                    <div class="info-card">
+                        <h5><i class="fas fa-notes-medical"></i> Appointment Notes</h5>
+                        <div class="notes-section">
+                            <textarea id="appointmentNotes" placeholder="Add notes about this appointment..."><%= appointment.notes && appointment.notes.doctor ? appointment.notes.doctor : '' %></textarea>
+                            <button class="btn btn-primary mt-3" onclick="saveNotes()">
+                                <i class="fas fa-save"></i> Save Notes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-lg-4">
+                    <!-- Quick Actions -->
+                    <div class="info-card">
+                        <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+                        <div class="action-buttons" style="flex-direction: column;">
+                            <% if (appointment.status === 'scheduled' || appointment.status === 'confirmed') { %>
+                            <button class="btn btn-success" onclick="completeAppointment()">
+                                <i class="fas fa-check-circle"></i> Mark as Completed
+                            </button>
+                            <button class="btn btn-warning" onclick="cancelAppointment()">
+                                <i class="fas fa-times-circle"></i> Cancel Appointment
+                            </button>
+                            <% } %>
+                            <a href="/doctor/prescriptions/new?appointment=<%= appointment._id %>&patient=<%= appointment.patient._id %>" class="btn btn-primary">
+                                <i class="fas fa-prescription"></i> Create Prescription
+                            </a>
+                            <a href="/doctor/patients/<%= appointment.patient._id %>" class="btn btn-info">
+                                <i class="fas fa-user-circle"></i> View Patient History
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Appointment History (if available) -->
+                    <% if (appointment.history && appointment.history.length > 0) { %>
+                    <div class="info-card">
+                        <h5><i class="fas fa-history"></i> History</h5>
+                        <div class="timeline">
+                            <% appointment.history.forEach(entry => { %>
+                            <div class="timeline-item">
+                                <div class="timeline-time">
+                                    <%= new Date(entry.date).toLocaleString('en-US', { 
+                                        month: 'short', 
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    }) %>
+                                </div>
+                                <div class="timeline-content">
+                                    <%= entry.action %>
+                                </div>
+                            </div>
+                            <% }); %>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('mobile-visible');
+            sidebarOverlay.classList.toggle('active');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('mobile-visible');
+            sidebarOverlay.classList.remove('active');
+        });
+
+        // Save notes function
+        function saveNotes() {
+            const notes = document.getElementById('appointmentNotes').value;
+            
+            fetch('/doctor/appointments/<%= appointment._id %>/notes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ notes: notes })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Notes saved successfully!');
+                } else {
+                    alert('Error saving notes: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error saving notes. Please try again.');
+            });
+        }
+
+        // Complete appointment function
+        function completeAppointment() {
+            if (confirm('Are you sure you want to mark this appointment as completed?')) {
+                fetch('/doctor/appointments/<%= appointment._id %>/complete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Appointment marked as completed!');
+                        window.location.reload();
+                    } else {
+                        alert('Error: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error completing appointment. Please try again.');
+                });
+            }
+        }
+
+        // Cancel appointment function
+        function cancelAppointment() {
+            const reason = prompt('Please enter reason for cancellation:');
+            if (reason !== null && reason.trim() !== '') {
+                fetch('/doctor/appointments/<%= appointment._id %>/cancel', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ reason: reason })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Appointment cancelled successfully!');
+                        window.location.reload();
+                    } else {
+                        alert('Error: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error cancelling appointment. Please try again.');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

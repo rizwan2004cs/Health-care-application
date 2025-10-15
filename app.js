@@ -1,8 +1,12 @@
+require('dotenv').config();
+
 const express = require("express");
 const app  = express();
 const mongoose = require("mongoose");
 const ejs = require("ejs");
-const MONGO_URL = "mongodb://127.0.0.1:27017/health_care";
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/health_care";
 const passport = require("passport");
 const passportLocal = require("passport-local");
 const User = require("./models/users.js")
@@ -43,8 +47,8 @@ async function createDefaultAdmin() {
         // Check if admin user already exists
         const existingAdmin = await User.findOne({ 
             $or: [
-                { email: "admin@healthcare.com" }, 
-                { username: "admin" }
+                { email: process.env.ADMIN_EMAIL || "admin@healthcare.com" }, 
+                { username: process.env.ADMIN_USERNAME || "admin" }
             ]
         });
         
@@ -55,12 +59,12 @@ async function createDefaultAdmin() {
         
         // Create admin user
         const adminUser = new User({
-            email: "admin@healthcare.com",
-            username: "admin",
+            email: process.env.ADMIN_EMAIL || "admin@healthcare.com",
+            username: process.env.ADMIN_USERNAME || "admin",
             portal: "admin"
         });
         
-        const registeredAdmin = await User.register(adminUser, "admin123");
+        const registeredAdmin = await User.register(adminUser, process.env.ADMIN_PASSWORD || "admin123");
         console.log("✅ Default admin user created successfully");
         
         // Create admin profile
@@ -92,18 +96,49 @@ async function createDefaultAdmin() {
         await adminProfile.save();
         console.log("✅ Default admin profile created successfully");
         console.log("🔑 Admin Login Details:");
-        console.log("   Email: admin@healthcare.com");
-        console.log("   Username: admin");
-        console.log("   Password: admin123");
-        console.log("   Portal: http://localhost:8080/admin/login");
+        console.log("   Email:", process.env.ADMIN_EMAIL || "admin@healthcare.com");
+        console.log("   Username:", process.env.ADMIN_USERNAME || "admin");
+        console.log("   Password: [Configured in .env file]");
+        console.log("   Portal: http://localhost:" + (process.env.PORT || 8080) + "/admin/login");
         
     } catch (error) {
         console.error("❌ Error creating default admin:", error.message);
     }
 }
 
+// MongoDB Session Store Configuration
+const SESSION_LIFETIME_DAYS = parseInt(process.env.SESSION_LIFETIME_DAYS) || 3;
+const SESSION_LIFETIME_MS = SESSION_LIFETIME_DAYS * 24 * 60 * 60 * 1000; // Convert to milliseconds
+const SESSION_LIFETIME_SEC = SESSION_LIFETIME_DAYS * 24 * 60 * 60; // Convert to seconds
+
+const sessionStore = MongoStore.create({
+    mongoUrl: MONGO_URL,
+    touchAfter: 24 * 3600, // Lazy session update - only update session once per 24 hours
+    crypto: {
+        secret: process.env.SESSION_SECRET || 'keyboard cat'
+    },
+    collectionName: 'sessions',
+    ttl: SESSION_LIFETIME_SEC // Session expires after configured days (in seconds)
+});
+
+sessionStore.on('error', (err) => {
+    console.error('❌ Session store error:', err);
+});
+
+console.log(`✅ Session store configured with ${SESSION_LIFETIME_DAYS} day(s) lifetime`);
+
 // Express session and passport configuration - MUST come before routes
-app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(session({ 
+    secret: process.env.SESSION_SECRET || 'keyboard cat', 
+    resave: false, // Don't save session if unmodified
+    saveUninitialized: false, // Don't create session until something stored
+    store: sessionStore,
+    cookie: {
+        maxAge: SESSION_LIFETIME_MS, // Cookie expires after configured days (in milliseconds)
+        httpOnly: true, // Prevents client-side JS from accessing the cookie
+        secure: process.env.NODE_ENV === 'production' // Use secure cookies in production (HTTPS)
+    }
+}));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -160,7 +195,14 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
+// Add logging middleware to debug routing issues  
+app.use((req, res, next) => {
+    console.log(`[REQUEST] ${req.method} ${req.url}`);
+    next();
+});
+
 app.use("/",userRouter);
+
 app.get("/",(req,res) => {
     res.render("portal-selection.ejs", {
         successMessage: req.flash('success')[0] || null,
@@ -393,6 +435,133 @@ app.get("/test-form", (req, res) => {
     res.sendFile(__dirname + '/test-form.html');
 });
 
-app.listen(8080,() =>{
-    console.log("Server is listening on port 8080")
+// Check session status
+app.get("/check-session", (req, res) => {
+    res.sendFile(__dirname + '/check-session.html');
+});
+
+// API endpoint to check session
+app.get("/api/check-session", (req, res) => {
+    if (req.user) {
+        res.json({
+            loggedIn: true,
+            portal: req.user.portal,
+            email: req.user.email,
+            username: req.user.username,
+            userId: req.user._id
+        });
+    } else {
+        res.json({
+            loggedIn: false
+        });
+    }
+});
+
+// Test appointment page (bypasses authentication for testing)
+app.get("/test-simple", (req, res) => {
+    console.log("=== SIMPLE TEST ROUTE HIT ===");
+    res.send("Simple test works!");
+});
+
+app.get("/test-appointment-page", async (req, res) => {
+    console.log("=== TEST APPOINTMENT PAGE ROUTE HIT - NEW VERSION ===");
+    try {
+        const User = require('./models/users.js');
+        const Doctor = require('./models/doctors.js');
+        const Appointment = require('./models/appointments.js');
+        
+        console.log('=== TEST APPOINTMENT PAGE ACCESSED ===');
+        
+        // Find the doctor
+        const doctor = await Doctor.findOne({ firstName: 'umesh' });
+        if (!doctor) {
+            console.log('❌ Doctor not found');
+            return res.send('Doctor not found. Please create a doctor first.');
+        }
+        
+        console.log('✅ Doctor found:', doctor.firstName, doctor.lastName);
+        
+        // Find user for this doctor
+        const user = await User.findById(doctor.user);
+        if (!user) {
+            console.log('❌ User not found');
+            return res.send('User not found for this doctor.');
+        }
+        console.log('✅ User found:', user.email);
+        
+        // Get the appointment
+        const appointmentId = '68ee8a4e3bc7dffddb623f36';
+        const appointment = await Appointment.findById(appointmentId)
+            .populate('patient')
+            .populate('doctor');
+        
+        if (!appointment) {
+            console.log('❌ Appointment not found');
+            return res.send('Appointment not found');
+        }
+        
+        console.log('✅ Appointment found:', appointment.patient.firstName, 'with Dr.', appointment.doctor.firstName);
+        console.log('✅ About to render view...');
+        
+        // Render the appointment details page
+        res.render("doctor/appointment-details.ejs", {
+            user: user,
+            profile: doctor,
+            appointment: appointment,
+            errorMessage: null,
+            successMessage: null
+        });
+        
+        console.log('✅ View rendered successfully');
+    } catch (error) {
+        console.error('❌ Test page error:', error.message);
+        console.error('Stack:', error.stack);
+        res.send('Error: ' + error.message + '<br><br><pre>' + error.stack + '</pre>');
+    }
+});
+
+// 404 Error Handler - Must be after all other routes
+app.use((req, res, next) => {
+    // Check if user is trying to access protected route without auth
+    if (!req.user) {
+        const urlParts = req.url.split('/');
+        const portal = urlParts[1]; // Extract portal from URL
+        
+        // Redirect to appropriate login page for protected portals
+        if (portal === 'doctor' || portal === 'patient' || portal === 'admin') {
+            console.log(`[AUTH] Unauthenticated access attempt to ${req.url} - redirecting to ${portal} login`);
+            req.flash('error', 'Please log in to access this page');
+            return res.redirect(`/${portal}/login`);
+        }
+    }
+    
+    // True 404 - page not found
+    console.log(`[404] Page not found: ${req.url}`);
+    res.status(404).render('error-404.ejs');
+});
+
+// General Error Handler
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    const statusCode = err.status || 500;
+    
+    // For 404 errors, render custom 404 page
+    if (statusCode === 404) {
+        return res.status(404).render('error-404.ejs');
+    }
+    
+    // For authentication errors, redirect to login
+    if (statusCode === 401 || statusCode === 403) {
+        console.log(`[AUTH ERROR] ${statusCode} - Redirecting to login`);
+        req.flash('error', 'Authentication required');
+        return res.redirect('/');
+    }
+    
+    // For other errors, render 404 page as fallback (or create a 500 error page)
+    res.status(statusCode).render('error-404.ejs');
+});
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
 });

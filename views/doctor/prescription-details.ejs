@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescription Details - Bizil Health Care</title>
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/modern-dashboard.css">
+    <style>
+        body {
+            background: #F8FAFC;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .prescription-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            margin-bottom: 1.5rem;
+            border: 1px solid #E2E8F0;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: #64748B;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: #1E293B;
+            font-weight: 500;
+        }
+
+        .medication-item {
+            background: #F8FAFC;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .medication-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 0.5rem;
+        }
+
+        .dosage-info {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
+        }
+
+        .dosage-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #64748B;
+        }
+
+        .dosage-item i {
+            color: #8B5CF6;
+        }
+
+        .notes-section {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #64748B;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #E2E8F0;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+            color: #64748B;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-active {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-completed {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .status-cancelled {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Bizil Health</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="/doctor/dashboard" class="nav-link">
+                            <i class="fas fa-th-large"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/doctor/appointments" class="nav-link">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/doctor/patients" class="nav-link">
+                            <i class="fas fa-users"></i>
+                            <span>Patients</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/doctor/prescriptions" class="nav-link active">
+                            <i class="fas fa-prescription"></i>
+                            <span>Prescriptions</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/doctor/schedule" class="nav-link">
+                            <i class="fas fa-clock"></i>
+                            <span>Schedule</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/doctor/profile" class="nav-link">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/logout" class="nav-link">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="dashboard-header" style="margin-bottom: 2rem;">
+                <div class="welcome-section">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div>
+                            <a href="/doctor/prescriptions" style="color: #64748B; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-arrow-left"></i> Back to Prescriptions
+                            </a>
+                            <h1 style="margin: 0;">Prescription Details</h1>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="user-profile">
+                        <div class="user-avatar" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6);">
+                            <%= (profile && profile.firstName) ? profile.firstName.charAt(0).toUpperCase() : 'D' %>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">Dr. <%= (profile && profile.firstName) ? (profile.firstName + ' ' + (profile.lastName || '')) : 'Doctor' %></div>
+                            <div class="user-role"><%= (profile && profile.specialization) ? profile.specialization : 'Doctor' %></div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Prescription Header -->
+            <div class="prescription-header">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <h2 style="margin: 0; font-size: 1.75rem;">
+                                <i class="fas fa-prescription"></i>
+                                #<%= prescription.prescriptionId || prescription._id.toString().slice(-8).toUpperCase() %>
+                            </h2>
+                            <span class="status-badge status-<%= prescription.status || 'active' %>">
+                                <%= (prescription.status || 'active').toUpperCase() %>
+                            </span>
+                        </div>
+                        <p style="margin: 0; opacity: 0.9;">
+                            Issued to: <strong><%= prescription.patient.firstName %> <%= prescription.patient.lastName %></strong>
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div style="display: flex; gap: 0.75rem; justify-content: flex-end; flex-wrap: wrap;">
+                            <a href="/doctor/prescriptions/<%= prescription._id %>/print" target="_blank" class="btn-secondary" style="background: white;">
+                                <i class="fas fa-print"></i> Print
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Prescription Details -->
+            <div class="row">
+                <!-- Left Column -->
+                <div class="col-md-8">
+                    <!-- Patient Information -->
+                    <div class="info-card">
+                        <h5 style="margin-bottom: 1.5rem; color: #1E293B; font-weight: 600;">
+                            <i class="fas fa-user-injured" style="color: #8B5CF6;"></i> Patient Information
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="info-label">Patient Name</div>
+                                <div class="info-value"><%= prescription.patient.firstName %> <%= prescription.patient.lastName %></div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="info-label">Age</div>
+                                <div class="info-value"><%= prescription.patient.age || 'N/A' %> years</div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="info-label">Gender</div>
+                                <div class="info-value" style="text-transform: capitalize;"><%= prescription.patient.gender || 'N/A' %></div>
+                            </div>
+                            <% if (prescription.patient.bloodGroup) { %>
+                            <div class="col-md-6 mb-3">
+                                <div class="info-label">Blood Group</div>
+                                <div class="info-value"><%= prescription.patient.bloodGroup %></div>
+                            </div>
+                            <% } %>
+                            <% if (prescription.patient.phone) { %>
+                            <div class="col-md-6 mb-3">
+                                <div class="info-label">Phone</div>
+                                <div class="info-value"><%= prescription.patient.phone %></div>
+                            </div>
+                            <% } %>
+                        </div>
+                    </div>
+                    
+                    <!-- Diagnosis -->
+                    <% if (prescription.diagnosis) { %>
+                    <div class="info-card">
+                        <h5 style="margin-bottom: 1rem; color: #1E293B; font-weight: 600;">
+                            <i class="fas fa-stethoscope" style="color: #8B5CF6;"></i> Diagnosis
+                        </h5>
+                        <p style="color: #475569; margin: 0;"><%= prescription.diagnosis %></p>
+                    </div>
+                    <% } %>
+                    
+                    <!-- Medications -->
+                    <div class="info-card">
+                        <h5 style="margin-bottom: 1.5rem; color: #1E293B; font-weight: 600;">
+                            <i class="fas fa-pills" style="color: #8B5CF6;"></i> Prescribed Medications
+                        </h5>
+                        
+                        <% if (prescription.medications && prescription.medications.length > 0) { %>
+                            <% prescription.medications.forEach((med, index) => { %>
+                                <div class="medication-item">
+                                    <div class="medication-name">
+                                        <%= index + 1 %>. <%= med.name %>
+                                        <% if (med.strength) { %>
+                                            <span style="font-weight: 500; color: #64748B;">- <%= med.strength %></span>
+                                        <% } %>
+                                    </div>
+                                    
+                                    <div class="dosage-info">
+                                        <% if (med.dosage && med.dosage.frequency) { %>
+                                        <div class="dosage-item">
+                                            <i class="fas fa-clock"></i>
+                                            <span><strong>Frequency:</strong> <%= med.dosage.frequency %></span>
+                                        </div>
+                                        <% } %>
+                                        
+                                        <% if (med.dosage && med.dosage.quantity) { %>
+                                        <div class="dosage-item">
+                                            <i class="fas fa-tablets"></i>
+                                            <span><strong>Quantity:</strong> <%= med.dosage.quantity %></span>
+                                        </div>
+                                        <% } %>
+                                        
+                                        <% if (med.dosage && med.dosage.timing) { %>
+                                        <div class="dosage-item">
+                                            <i class="fas fa-utensils"></i>
+                                            <span><strong>Timing:</strong> <%= med.dosage.timing %></span>
+                                        </div>
+                                        <% } %>
+                                        
+                                        <% if (med.dosage && med.dosage.duration) { %>
+                                        <div class="dosage-item">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span><strong>Duration:</strong> <%= med.dosage.duration %></span>
+                                        </div>
+                                        <% } %>
+                                    </div>
+                                    
+                                    <% if (med.instructions) { %>
+                                    <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #E2E8F0;">
+                                        <div style="font-size: 0.875rem; color: #64748B;">
+                                            <i class="fas fa-info-circle"></i> <strong>Instructions:</strong> <%= med.instructions %>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <p style="color: #94A3B8; text-align: center; padding: 2rem;">No medications prescribed</p>
+                        <% } %>
+                    </div>
+                    
+                    <!-- Additional Notes -->
+                    <% if (prescription.notes) { %>
+                    <div class="info-card">
+                        <h5 style="margin-bottom: 1rem; color: #1E293B; font-weight: 600;">
+                            <i class="fas fa-sticky-note" style="color: #F59E0B;"></i> Additional Notes
+                        </h5>
+                        <div class="notes-section">
+                            <p style="margin: 0; color: #92400E;"><%= prescription.notes %></p>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+                
+                <!-- Right Column -->
+                <div class="col-md-4">
+                    <!-- Prescription Summary -->
+                    <div class="info-card">
+                        <h5 style="margin-bottom: 1.5rem; color: #1E293B; font-weight: 600;">
+                            <i class="fas fa-info-circle" style="color: #8B5CF6;"></i> Prescription Summary
+                        </h5>
+                        
+                        <div class="mb-3">
+                            <div class="info-label">Prescribed On</div>
+                            <div class="info-value">
+                                <%= new Date(prescription.prescriptionDate).toLocaleDateString('en-US', { 
+                                    month: 'short', 
+                                    day: 'numeric', 
+                                    year: 'numeric' 
+                                }) %>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="info-label">Valid Until</div>
+                            <div class="info-value" style="color: #10B981;">
+                                <%= new Date(prescription.validUntil).toLocaleDateString('en-US', { 
+                                    month: 'short', 
+                                    day: 'numeric', 
+                                    year: 'numeric' 
+                                }) %>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="info-label">Medications</div>
+                            <div class="info-value"><%= prescription.medications.length %> items</div>
+                        </div>
+                        
+                        <% if (prescription.followUpDate) { %>
+                        <div class="mb-3">
+                            <div class="info-label">Follow-up Date</div>
+                            <div class="info-value">
+                                <%= new Date(prescription.followUpDate).toLocaleDateString('en-US', { 
+                                    month: 'short', 
+                                    day: 'numeric', 
+                                    year: 'numeric' 
+                                }) %>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                    
+                    <!-- Doctor Information -->
+                    <div class="info-card">
+                        <h5 style="margin-bottom: 1.5rem; color: #1E293B; font-weight: 600;">
+                            <i class="fas fa-user-md" style="color: #8B5CF6;"></i> Prescribed By
+                        </h5>
+                        
+                        <div class="mb-3">
+                            <div class="info-label">Doctor Name</div>
+                            <div class="info-value">Dr. <%= prescription.doctor.firstName %> <%= prescription.doctor.lastName %></div>
+                        </div>
+                        
+                        <% if (prescription.doctor.specialization) { %>
+                        <div class="mb-3">
+                            <div class="info-label">Specialization</div>
+                            <div class="info-value"><%= prescription.doctor.specialization %></div>
+                        </div>
+                        <% } %>
+                        
+                        <% if (prescription.doctor.licenseNumber) { %>
+                        <div class="mb-3">
+                            <div class="info-label">License Number</div>
+                            <div class="info-value"><%= prescription.doctor.licenseNumber %></div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('mobile-visible');
+                sidebarOverlay.classList.toggle('active');
+            });
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('mobile-visible');
+                sidebarOverlay.classList.remove('active');
+            });
+        }
+    </script>
+</body>
+</html>

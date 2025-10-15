@@ -3,87 +3,504 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Selection - Health Connect</title>
+    <title>Portal Selection - Bizil Health Care</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Font Awesome for icons - Updated to latest version with integrity check -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Fallback to alternative CDN -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" crossorigin="anonymous">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #fef3c7 100%);
+            min-height: 100vh;
+            padding: 0;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .portal-selection-container {
+            max-width: 1400px;
+            width: 100%;
+            min-height: 100vh;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1rem 2rem 2rem;
+            gap: 1rem;
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+        }
+        
+        .portal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+        }
+        
+        .support-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .support-link {
+            color: #64748B;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .support-link:hover {
+            color: #8B5CF6;
+        }
+        
+        .support-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            transition: width 0.3s ease;
+        }
+        
+        .support-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Header Section */
+        .portal-header {
+            text-align: center;
+            padding: 1rem 0;
+        }
+        
+        .portal-subtitle {
+            font-size: 0.9375rem;
+            color: #64748B;
+            margin: 0;
+        }
+        
+        .header-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #1E293B;
+            margin: 0.5rem 0;
+            line-height: 1.2;
+        }
+        
+        .header-title .gradient-text {
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header-description {
+            font-size: 0.9375rem;
+            color: #64748B;
+            max-width: 600px;
+            margin: 0.5rem auto 0;
+            line-height: 1.5;
+        }
+        
+        /* Portal Cards */
+        .portal-cards-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+        
+        .portal-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, currentColor, transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .portal-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            border-color: currentColor;
+        }
+        
+        .portal-card:hover::before {
+            opacity: 1;
+        }
+        
+        .patient-portal {
+            color: #8B5CF6;
+        }
+        
+        .patient-portal:hover {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(139, 92, 246, 0.02));
+        }
+        
+        .doctor-portal {
+            color: #10B981;
+        }
+        
+        .doctor-portal:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.02));
+        }
+        
+        .admin-portal {
+            color: #F97316;
+        }
+        
+        .admin-portal:hover {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.05), rgba(249, 115, 22, 0.02));
+        }
+        
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            border-radius: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.25rem;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            position: relative;
+        }
+        
+        .patient-portal .card-icon {
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            color: white;
+        }
+        
+        .doctor-portal .card-icon {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+        }
+        
+        .admin-portal .card-icon {
+            background: linear-gradient(135deg, #F97316, #EA580C);
+            color: white;
+        }
+        
+        .card-icon i {
+            display: block;
+            font-size: 2.25rem;
+            line-height: 1;
+        }
+        
+        .portal-card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.15);
+        }
+        
+        .card-title {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 0.875rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .card-description {
+            font-size: 1rem;
+            color: #64748B;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        /* Features Section */
+        .portal-features {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            padding: 1.5rem 2rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            margin-top: 1rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #64748B;
+            font-weight: 500;
+            font-size: 0.9375rem;
+        }
+        
+        .feature-item i {
+            font-size: 1.25rem;
+            color: #8B5CF6;
+        }
+        
+        /* Flash Messages */
+        .alert {
+            border-radius: 0.75rem;
+            padding: 1rem 1.25rem;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.95);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.95);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .portal-selection-container {
+                padding: 1.5rem;
+            }
+            
+            .portal-cards-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .support-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .header-title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .portal-selection-container {
+                padding: 1rem;
+            }
+            
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .portal-title {
+                font-size: 1.25rem;
+            }
+            
+            .header-title {
+                font-size: 1.75rem;
+            }
+            
+            .portal-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .portal-features {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="portal-selection-container">
         <!-- Flash Messages -->
         <% if (typeof successMessage !== 'undefined' && successMessage) { %>
             <div class="alert alert-success flash-message" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1000; max-width: 400px;">
-                <i class="fas fa-check-circle me-2"></i>
-                <%= successMessage %>
+                <i class="fas fa-check-circle"></i>
+                <span><%= successMessage %></span>
             </div>
         <% } %>
     
-    <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
-        <div class="alert alert-danger flash-message" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1000; max-width: 400px;">
-            <i class="fas fa-exclamation-circle me-2"></i>
-            <%= errorMessage %>
-        </div>
-    <% } %>
-
-    <div class="portal-header">
-        <div class="logo-section">
-            <i class="fas fa-heartbeat logo-icon"></i>
-            <h1 class="portal-title">HEALTH CONNECT</h1>
-            <p class="portal-subtitle">Your Integrated Healthcare Management Platform</p>
-        </div>
-        
-        <div class="support-links">
-            <a href="#" class="support-link">Support</a>
-            <a href="#" class="support-link">FAQ</a>
-            <a href="#" class="support-link">Request</a>
-            <a href="#" class="support-link">Contact Us</a>
-        </div>
-    </div>
-
-    <div class="portal-cards-container">
-        <div class="portal-card patient-portal" onclick="selectPortal('patient')">
-            <div class="card-icon">
-                <i class="fas fa-user-injured"></i>
+        <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+            <div class="alert alert-danger flash-message" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1000; max-width: 400px;">
+                <i class="fas fa-exclamation-circle"></i>
+                <span><%= errorMessage %></span>
             </div>
-            <h3 class="card-title">PATIENT PORTAL</h3>
-            <p class="card-description">Access appointments, records, and medical information</p>
-        </div>
+        <% } %>
 
-        <div class="portal-card doctor-portal" onclick="selectPortal('doctor')">
-            <div class="card-icon">
-                <i class="fas fa-user-md"></i>
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h1 class="portal-title">Bizil Health Care</h1>
             </div>
-            <h3 class="card-title">DOCTOR PORTAL</h3>
-            <p class="card-description">Manage patient cases and schedules</p>
-        </div>
-
-        <div class="portal-card admin-portal" onclick="selectPortal('admin')">
-            <div class="card-icon">
-                <i class="fas fa-cogs"></i>
+            
+            <div class="support-links">
+                <a href="/" class="support-link">Home</a>
+                <a href="#" class="support-link">Support</a>
+                <a href="#" class="support-link">FAQ</a>
+                <a href="#" class="support-link">Contact</a>
             </div>
-            <h3 class="card-title">ADMIN PANEL</h3>
-            <p class="card-description">System oversight and user management</p>
-        </div>
-    </div>
+        </nav>
 
-    <div class="portal-features">
-        <div class="feature-item">
-            <i class="fas fa-shield-alt"></i>
-            <span>Secure & HIPAA Compliant</span>
+        <!-- Header Section -->
+        <div class="portal-header">
+            <p class="portal-subtitle">Welcome to</p>
+            <h1 class="header-title">
+                Choose Your <span class="gradient-text">Portal</span>
+            </h1>
+            <p class="header-description">
+                Select the portal that matches your role to access your personalized healthcare dashboard
+            </p>
         </div>
-        <div class="feature-item">
-            <i class="fas fa-clock"></i>
-            <span>24/7 Access</span>
+
+        <!-- Portal Cards -->
+        <div class="portal-cards-container">
+            <div class="portal-card patient-portal" onclick="selectPortal('patient')">
+                <div class="card-icon">
+                    <i class="fas fa-user-injured"></i>
+                </div>
+                <h3 class="card-title">PATIENT PORTAL</h3>
+                <p class="card-description">Access appointments, records, and medical information</p>
+            </div>
+
+            <div class="portal-card doctor-portal" onclick="selectPortal('doctor')">
+                <div class="card-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h3 class="card-title">DOCTOR PORTAL</h3>
+                <p class="card-description">Manage patient cases and schedules</p>
+            </div>
+
+            <div class="portal-card admin-portal" onclick="selectPortal('admin')">
+                <div class="card-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h3 class="card-title">ADMIN PANEL</h3>
+                <p class="card-description">System oversight and user management</p>
+            </div>
         </div>
-        <div class="feature-item">
-            <i class="fas fa-mobile-alt"></i>
-            <span>Mobile Responsive</span>
-        </div>
+
+        <!-- Features Section -->
+        <div class="portal-features">
+            <div class="feature-item">
+                <i class="fas fa-shield-alt"></i>
+                <span>Secure & HIPAA Compliant</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-clock"></i>
+                <span>24/7 Access</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-mobile-alt"></i>
+                <span>Mobile Responsive</span>
+            </div>
         </div>
     </div>
 

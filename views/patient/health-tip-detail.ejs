@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= healthTip.title %> - Bizil Health Care</title>
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/modern-dashboard.css">
+    <style>
+        body {
+            background: #F8FAFC;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .article-header {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6B7280;
+            font-size: 0.9375rem;
+        }
+
+        .meta-item i {
+            color: #8B5CF6;
+            font-size: 1rem;
+        }
+
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: capitalize;
+        }
+
+        .priority-badge {
+            padding: 0.375rem 0.875rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+        }
+
+        .priority-high { background: #FEE2E2; color: #DC2626; }
+        .priority-critical { background: #FEE2E2; color: #991B1B; }
+        .priority-medium { background: #FEF3C7; color: #D97706; }
+        .priority-low { background: #DBEAFE; color: #2563EB; }
+
+        .difficulty-badge {
+            padding: 0.375rem 0.875rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8125rem;
+            text-transform: capitalize;
+        }
+
+        .difficulty-easy { background: #D1FAE5; color: #059669; }
+        .difficulty-moderate { background: #FEF3C7; color: #D97706; }
+        .difficulty-challenging { background: #FEE2E2; color: #DC2626; }
+
+        .article-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .article-summary {
+            font-size: 1.125rem;
+            color: #6B7280;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        .featured-image {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .featured-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .article-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .article-content p {
+            font-size: 1.0625rem;
+            line-height: 1.8;
+            color: #374151;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-content ul,
+        .article-content ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-content li {
+            font-size: 1.0625rem;
+            line-height: 1.8;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .engagement-bar {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .engagement-stats {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .engagement-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6B7280;
+            font-size: 0.9375rem;
+        }
+
+        .engagement-stat i {
+            font-size: 1.125rem;
+        }
+
+        .engagement-stat span {
+            font-weight: 600;
+        }
+
+        .engagement-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .engagement-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            border: 1px solid #E5E7EB;
+            background: white;
+            color: #6B7280;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .engagement-btn:hover {
+            background: #F9FAFB;
+            color: #374151;
+            border-color: #D1D5DB;
+        }
+
+        .engagement-btn.active {
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            color: white;
+            border-color: transparent;
+        }
+
+        .engagement-btn i {
+            font-size: 1.125rem;
+        }
+
+        .source-info {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .source-info h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .source-info h4 i {
+            color: #8B5CF6;
+        }
+
+        .source-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .source-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .source-label {
+            font-size: 0.8125rem;
+            color: #6B7280;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .source-value {
+            font-size: 1rem;
+            color: #111827;
+            font-weight: 600;
+        }
+
+        .credibility-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8125rem;
+            text-transform: capitalize;
+        }
+
+        .credibility-verified {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        .credibility-peer-reviewed {
+            background: #DBEAFE;
+            color: #2563EB;
+        }
+
+        .credibility-expert-opinion {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .credibility-general {
+            background: #F3F4F6;
+            color: #6B7280;
+        }
+
+        .tags-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .tags-section h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tags-section h4 i {
+            color: #8B5CF6;
+        }
+
+        .tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .tag-item {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: #F3F4F6;
+            color: #374151;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tag-item:hover {
+            background: #E5E7EB;
+            color: #111827;
+        }
+
+        .related-tips {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .related-tips h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .related-tips h4 i {
+            color: #8B5CF6;
+        }
+
+        .related-tip-card {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid #E5E7EB;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+            margin-bottom: 1rem;
+        }
+
+        .related-tip-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .related-tip-card:hover {
+            border-color: #8B5CF6;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .related-tip-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .related-tip-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .related-tip-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .related-tip-meta {
+            font-size: 0.8125rem;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6B7280;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .back-button:hover {
+            color: #8B5CF6;
+        }
+
+        .back-button i {
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .article-title {
+                font-size: 1.75rem;
+            }
+
+            .article-header,
+            .article-content {
+                padding: 1.5rem;
+            }
+
+            .featured-image {
+                padding: 1rem;
+            }
+
+            .featured-image img {
+                height: 250px;
+            }
+
+            .engagement-bar {
+                padding: 1rem;
+            }
+
+            .engagement-stats {
+                gap: 1rem;
+            }
+
+            .engagement-actions {
+                width: 100%;
+            }
+
+            .engagement-btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .source-details {
+                grid-template-columns: 1fr;
+            }
+
+            .related-tip-card {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-heartbeat"></i>
+            </div>
+            <div>
+                <h2 class="sidebar-title">Bizil Health</h2>
+            </div>
+        </div>
+        
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/patient/dashboard" class="nav-link">
+                        <i class="fas fa-home nav-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/patient/appointments" class="nav-link">
+                        <i class="fas fa-calendar-alt nav-icon"></i>
+                        <span>Appointments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/patient/search-doctors" class="nav-link">
+                        <i class="fas fa-user-md nav-icon"></i>
+                        <span>Find Doctors</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/patient/test-results" class="nav-link">
+                        <i class="fas fa-flask nav-icon"></i>
+                        <span>Test Results</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/patient/prescriptions" class="nav-link">
+                        <i class="fas fa-pills nav-icon"></i>
+                        <span>Prescriptions</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/patient/health-tips" class="nav-link active">
+                        <i class="fas fa-lightbulb nav-icon"></i>
+                        <span>Health Tips</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/patient/complete-profile" class="nav-link">
+                        <i class="fas fa-user-edit nav-icon"></i>
+                        <span>My Profile</span>
+                    </a>
+                </li>
+                <li class="nav-item" style="margin-top: 2rem;">
+                    <a href="/patient/logout" class="nav-link" style="color: #EF4444;">
+                        <i class="fas fa-sign-out-alt nav-icon"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <div class="header-content">
+                <button class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-title">
+                    <h1><i class="fas fa-lightbulb"></i> Health Tips</h1>
+                    <p>Evidence-based health information and wellness advice</p>
+                </div>
+            </div>
+            <div class="user-profile">
+                <div class="user-info">
+                    <span class="user-name"><%= patient.firstName %> <%= patient.lastName %></span>
+                    <span class="user-role">Patient</span>
+                </div>
+                <div class="user-avatar">
+                    <% if (patient.avatar) { %>
+                        <img src="<%= patient.avatar %>" alt="<%= patient.firstName %>">
+                    <% } else { %>
+                        <i class="fas fa-user"></i>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <% if (successMessage) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle"></i>
+                <%= successMessage %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+
+        <% if (errorMessage) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle"></i>
+                <%= errorMessage %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+
+        <!-- Content -->
+        <div class="dashboard-content">
+            <!-- Back Button -->
+            <a href="/patient/health-tips" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Back to Health Tips
+            </a>
+
+            <!-- Article Header -->
+            <div class="article-header">
+                <div class="article-meta">
+                    <span class="category-badge">
+                        <i class="fas fa-tag"></i>
+                        <%= healthTip.category.replace(/-/g, ' ') %>
+                    </span>
+                    <span class="priority-badge priority-<%= healthTip.priority %>">
+                        <%= healthTip.priority %>
+                    </span>
+                    <span class="difficulty-badge difficulty-<%= healthTip.difficulty %>">
+                        <%= healthTip.difficulty %>
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <%= healthTip.timeToRead || healthTip.estimatedReadTime %> min read
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <%= new Date(healthTip.publishedAt || healthTip.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                    </span>
+                </div>
+
+                <h1 class="article-title"><%= healthTip.title %></h1>
+                <p class="article-summary"><%= healthTip.summary %></p>
+            </div>
+
+            <!-- Featured Image -->
+            <% if (healthTip.media && healthTip.media.image && healthTip.media.image.url) { %>
+                <div class="featured-image">
+                    <img src="<%= healthTip.media.image.url %>" alt="<%= healthTip.media.image.alt || healthTip.title %>">
+                </div>
+            <% } %>
+
+            <!-- Engagement Bar -->
+            <div class="engagement-bar">
+                <div class="engagement-stats">
+                    <div class="engagement-stat">
+                        <i class="fas fa-eye" style="color: #8B5CF6;"></i>
+                        <span><%= healthTip.engagement.views || 0 %></span> Views
+                    </div>
+                    <div class="engagement-stat">
+                        <i class="fas fa-heart" style="color: #EF4444;"></i>
+                        <span><%= healthTip.engagement.likes || 0 %></span> Likes
+                    </div>
+                    <div class="engagement-stat">
+                        <i class="fas fa-bookmark" style="color: #F59E0B;"></i>
+                        <span><%= healthTip.engagement.bookmarks || 0 %></span> Bookmarks
+                    </div>
+                    <div class="engagement-stat">
+                        <i class="fas fa-share-alt" style="color: #3B82F6;"></i>
+                        <span><%= healthTip.engagement.shares || 0 %></span> Shares
+                    </div>
+                </div>
+
+                <div class="engagement-actions">
+                    <button class="engagement-btn <%= healthTip.isLikedBy(patient._id) ? 'active' : '' %>" 
+                            onclick="toggleLike('<%= healthTip._id %>')">
+                        <i class="<%= healthTip.isLikedBy(patient._id) ? 'fas' : 'far' %> fa-heart"></i>
+                        Like
+                    </button>
+                    <button class="engagement-btn <%= healthTip.isBookmarkedBy(patient._id) ? 'active' : '' %>" 
+                            onclick="toggleBookmark('<%= healthTip._id %>')">
+                        <i class="<%= healthTip.isBookmarkedBy(patient._id) ? 'fas' : 'far' %> fa-bookmark"></i>
+                        Bookmark
+                    </button>
+                    <button class="engagement-btn" onclick="shareArticle()">
+                        <i class="fas fa-share-alt"></i>
+                        Share
+                    </button>
+                </div>
+            </div>
+
+            <!-- Article Content -->
+            <div class="article-content">
+                <%- healthTip.content %>
+            </div>
+
+            <!-- Source Information -->
+            <% if (healthTip.source && (healthTip.source.author || healthTip.source.organization)) { %>
+                <div class="source-info">
+                    <h4>
+                        <i class="fas fa-info-circle"></i>
+                        Source Information
+                    </h4>
+                    <div class="source-details">
+                        <% if (healthTip.source.author) { %>
+                            <div class="source-item">
+                                <span class="source-label">Author</span>
+                                <span class="source-value"><%= healthTip.source.author %></span>
+                            </div>
+                        <% } %>
+                        <% if (healthTip.source.organization) { %>
+                            <div class="source-item">
+                                <span class="source-label">Organization</span>
+                                <span class="source-value"><%= healthTip.source.organization %></span>
+                            </div>
+                        <% } %>
+                        <% if (healthTip.source.credibility) { %>
+                            <div class="source-item">
+                                <span class="source-label">Credibility</span>
+                                <span class="credibility-badge credibility-<%= healthTip.source.credibility %>">
+                                    <i class="fas fa-shield-check"></i>
+                                    <%= healthTip.source.credibility.replace(/-/g, ' ') %>
+                                </span>
+                            </div>
+                        <% } %>
+                        <% if (healthTip.source.url) { %>
+                            <div class="source-item">
+                                <span class="source-label">Reference</span>
+                                <a href="<%= healthTip.source.url %>" target="_blank" class="source-value" style="color: #8B5CF6; text-decoration: none;">
+                                    View Source <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                                </a>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Tags -->
+            <% if (healthTip.tags && healthTip.tags.length > 0) { %>
+                <div class="tags-section">
+                    <h4>
+                        <i class="fas fa-tags"></i>
+                        Related Topics
+                    </h4>
+                    <div class="tags-list">
+                        <% healthTip.tags.forEach(tag => { %>
+                            <span class="tag-item">#<%= tag %></span>
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Related Tips -->
+            <% if (relatedTips && relatedTips.length > 0) { %>
+                <div class="related-tips">
+                    <h4>
+                        <i class="fas fa-link"></i>
+                        Related Health Tips
+                    </h4>
+                    <% relatedTips.forEach(tip => { %>
+                        <a href="/patient/health-tips/<%= tip._id %>" class="related-tip-card">
+                            <div class="related-tip-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="related-tip-content">
+                                <div class="related-tip-title"><%= tip.title %></div>
+                                <div class="related-tip-meta">
+                                    <span><i class="fas fa-tag"></i> <%= tip.category.replace(/-/g, ' ') %></span>
+                                    <span><i class="fas fa-clock"></i> <%= tip.timeToRead || tip.estimatedReadTime %> min</span>
+                                    <span><i class="fas fa-eye"></i> <%= tip.engagement.views || 0 %> views</span>
+                                </div>
+                            </div>
+                        </a>
+                    <% }); %>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    overlay.classList.toggle('active');
+                });
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+            }
+        });
+
+        // Toggle like
+        async function toggleLike(tipId) {
+            try {
+                const response = await fetch(`/patient/health-tips/${tipId}/like`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    const data = await response.json();
+                    alert(data.message || 'Failed to update like status');
+                }
+            } catch (error) {
+                console.error('Error toggling like:', error);
+                alert('An error occurred. Please try again.');
+            }
+        }
+
+        // Toggle bookmark
+        async function toggleBookmark(tipId) {
+            try {
+                const response = await fetch(`/patient/health-tips/${tipId}/bookmark`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    const data = await response.json();
+                    alert(data.message || 'Failed to update bookmark status');
+                }
+            } catch (error) {
+                console.error('Error toggling bookmark:', error);
+                alert('An error occurred. Please try again.');
+            }
+        }
+
+        // Share article
+        function shareArticle() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '<%= healthTip.title %>',
+                    text: '<%= healthTip.summary %>',
+                    url: window.location.href
+                }).catch(error => console.log('Error sharing:', error));
+            } else {
+                // Fallback: Copy to clipboard
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('Link copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

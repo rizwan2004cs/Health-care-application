@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Result Details - Bizil Health Care</title>
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/modern-dashboard.css">
+    <style>
+        body {
+            background: #F8FAFC;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .main-content {
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .detail-header {
+            background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
+        }
+
+        .detail-header h2 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.875rem;
+        }
+
+        .detail-header .test-type {
+            opacity: 0.9;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.5rem;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #E2E8F0;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-title i {
+            color: #8B5CF6;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748B;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: #1E293B;
+            font-weight: 500;
+        }
+
+        .parameter-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .parameter-table thead th {
+            background: #F8FAFC;
+            color: #64748B;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #E2E8F0;
+        }
+
+        .parameter-table tbody tr {
+            border-bottom: 1px solid #E2E8F0;
+            transition: background 0.2s ease;
+        }
+
+        .parameter-table tbody tr:hover {
+            background: #F8FAFC;
+        }
+
+        .parameter-table tbody td {
+            padding: 1.25rem 1rem;
+        }
+
+        .parameter-name {
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .parameter-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #8B5CF6;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.normal {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+
+        .status-badge.high {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+
+        .status-badge.low {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+        }
+
+        .status-badge.critical, .status-badge.critical-high, .status-badge.critical-low {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .notes-section {
+            background: #F8FAFC;
+            border-left: 4px solid #8B5CF6;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .notes-section h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 0.75rem;
+        }
+
+        .notes-section p {
+            color: #475569;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #8B5CF6;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            gap: 0.75rem;
+            color: #6D28D9;
+        }
+
+        .print-button {
+            background: #8B5CF6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .print-button:hover {
+            background: #6D28D9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        @media print {
+            .back-button, .print-button, .sidebar {
+                display: none !important;
+            }
+            
+            body {
+                background: white;
+            }
+
+            .main-content {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="container-fluid">
+            <a href="/patient/test-results" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Test Results
+            </a>
+
+            <div class="detail-header">
+                <h2><%= testResult.testName %></h2>
+                <div class="test-type"><%= testResult.testType.toUpperCase().replace(/-/g, ' ') %></div>
+            </div>
+
+            <!-- Test Information -->
+            <div class="info-card">
+                <div class="card-title">
+                    <i class="fas fa-info-circle"></i>
+                    Test Information
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Test Date</div>
+                        <div class="info-value">
+                            <%= new Date(testResult.testDate).toLocaleDateString('en-US', { 
+                                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+                            }) %>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Report Date</div>
+                        <div class="info-value">
+                            <%= new Date(testResult.reportDate).toLocaleDateString('en-US', { 
+                                year: 'numeric', month: 'long', day: 'numeric' 
+                            }) %>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Lab Name</div>
+                        <div class="info-value"><%= testResult.labName || 'N/A' %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Status</div>
+                        <div class="info-value">
+                            <span class="status-badge <%= testResult.status %>">
+                                <%= testResult.status.toUpperCase() %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doctor Information -->
+            <% if (testResult.doctor) { %>
+            <div class="info-card">
+                <div class="card-title">
+                    <i class="fas fa-user-md"></i>
+                    Ordered By
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Doctor Name</div>
+                        <div class="info-value">Dr. <%= testResult.doctor.firstName %> <%= testResult.doctor.lastName %></div>
+                    </div>
+                    <% if (testResult.doctor.specialization) { %>
+                    <div class="info-item">
+                        <div class="info-label">Specialization</div>
+                        <div class="info-value"><%= testResult.doctor.specialization %></div>
+                    </div>
+                    <% } %>
+                    <% if (testResult.doctor.currentHospital) { %>
+                    <div class="info-item">
+                        <div class="info-label">Hospital</div>
+                        <div class="info-value">
+                            <% if (typeof testResult.doctor.currentHospital === 'string') { %>
+                                <%= testResult.doctor.currentHospital %>
+                            <% } else if (testResult.doctor.currentHospital.name) { %>
+                                <%= testResult.doctor.currentHospital.name %>
+                                <% if (testResult.doctor.currentHospital.department) { %>
+                                    - <%= testResult.doctor.currentHospital.department %>
+                                <% } %>
+                            <% } else { %>
+                                N/A
+                            <% } %>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+
+            <!-- Test Parameters -->
+            <% if (testResult.parameters && testResult.parameters.length > 0) { %>
+            <div class="info-card">
+                <div class="card-title">
+                    <i class="fas fa-chart-line"></i>
+                    Test Parameters & Results
+                </div>
+                <div class="table-responsive">
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Normal Range</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% testResult.parameters.forEach(param => { %>
+                            <tr>
+                                <td class="parameter-name"><%= param.name %></td>
+                                <td>
+                                    <span class="parameter-value">
+                                        <%= param.value %> <%= param.unit || '' %>
+                                    </span>
+                                </td>
+                                <td><%= param.normalRange || 'N/A' %></td>
+                                <td>
+                                    <span class="status-badge <%= param.status || 'normal' %>">
+                                        <i class="fas fa-circle"></i>
+                                        <%= (param.status || 'normal').toUpperCase() %>
+                                    </span>
+                                </td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <% } %>
+
+            <!-- Results Summary -->
+            <% if (testResult.results && testResult.results.summary) { %>
+            <div class="info-card">
+                <div class="card-title">
+                    <i class="fas fa-file-medical"></i>
+                    Results Summary
+                </div>
+                <p style="color: #475569; line-height: 1.6;">
+                    <%= testResult.results.summary %>
+                </p>
+            </div>
+            <% } %>
+
+            <!-- Doctor's Interpretation -->
+            <% if (testResult.results && testResult.results.interpretation) { %>
+            <div class="notes-section">
+                <h4><i class="fas fa-stethoscope"></i> Clinical Interpretation</h4>
+                <p><%= testResult.results.interpretation %></p>
+            </div>
+            <% } %>
+
+            <!-- Recommendations -->
+            <% if (testResult.recommendations) { %>
+            <div class="notes-section">
+                <h4><i class="fas fa-lightbulb"></i> Recommendations</h4>
+                <p><%= testResult.recommendations %></p>
+            </div>
+            <% } %>
+
+            <!-- Additional Notes -->
+            <% if (testResult.notes) { %>
+            <div class="notes-section">
+                <h4><i class="fas fa-notes-medical"></i> Additional Notes</h4>
+                <p><%= testResult.notes %></p>
+            </div>
+            <% } %>
+
+            <!-- Action Buttons -->
+            <div class="mt-4 d-flex gap-3">
+                <button onclick="window.print()" class="print-button">
+                    <i class="fas fa-print"></i> Print Report
+                </button>
+                <a href="/patient/test-results" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to All Results
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

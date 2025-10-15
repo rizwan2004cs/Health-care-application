@@ -4,572 +4,700 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Bizil Health Care</title>
-    <!-- Bootstrap 5 CSS -->
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/modern-dashboard.css">
     <style>
-        body {
-            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        html, body {
+            height: auto !important;
             min-height: 100vh;
+            overflow-y: scroll !important;
+            overflow-x: hidden;
+        }
+        
+        body {
+            background: #F8FAFC;
             font-family: 'Inter', sans-serif;
             margin: 0;
+            padding: 0;
         }
         
-        /* Alert Messages */
-        .alert {
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 1rem;
+        .modern-dashboard {
+            min-height: 100vh;
+            width: 100%;
+            height: auto;
+        }
+        
+        .main-content {
+            min-height: 100vh;
+            height: auto;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+            max-width: 100%;
+        }
+
+        /* Admin-specific colors */
+        .admin-gradient {
+            background: linear-gradient(135deg, #8B5CF6, #6366F1);
+        }
+
+        .admin-icon-color {
+            color: #8B5CF6;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.75rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            border: 1px solid #E2E8F0;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-header {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+        }
+
+        .stat-icon.purple { background: linear-gradient(135deg, #8B5CF6, #6366F1); color: white; }
+        .stat-icon.blue { background: linear-gradient(135deg, #3B82F6, #2563EB); color: white; }
+        .stat-icon.green { background: linear-gradient(135deg, #10B981, #059669); color: white; }
+        .stat-icon.orange { background: linear-gradient(135deg, #F59E0B, #D97706); color: white; }
+        .stat-icon.red { background: linear-gradient(135deg, #EF4444, #DC2626); color: white; }
+        .stat-icon.teal { background: linear-gradient(135deg, #14B8A6, #0D9488); color: white; }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+        }
+
+        .stat-trend.up {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        .stat-trend.down {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.9375rem;
+            color: #64748B;
             font-weight: 500;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
         }
-        
-        .alert-success {
-            background: rgba(16, 185, 129, 0.2);
-            color: #d1fae5;
-            border-color: rgba(16, 185, 129, 0.3);
+
+        /* Quick Actions */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
-        
-        .alert-danger {
-            background: rgba(239, 68, 68, 0.2);
-            color: #fecaca;
-            border-color: rgba(239, 68, 68, 0.3);
-        }
-        
-        .alert i {
-            font-size: 1.1rem;
-        }
-        
-        .dashboard-content {
-            padding: 2rem;
+
+        .action-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            border: 1px solid #E2E8F0;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            justify-content: center;
+            gap: 0.75rem;
         }
-        
-        .welcome-section {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            border-radius: 24px;
-            padding: 3rem 2.5rem;
-            margin: 1rem auto;
-            max-width: 700px;
-            width: 100%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+
+        .action-card:hover {
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.15);
+            transform: translateY(-4px);
+            border-color: #8B5CF6;
         }
-        
-        .section-header {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            z-index: 10;
-        }
-        
-        .brand-header {
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .brand-header i {
-            font-size: 2rem;
-            color: #00d2ff;
-        }
-        
-        .brand-header .brand-name {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 0;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #8B5CF6, #6366F1);
             color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-        
-        .logout-btn {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 0.6rem 1.2rem;
-            border-radius: 12px;
-            text-decoration: none;
+
+        .action-title {
+            font-size: 1rem;
             font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
+            color: #1E293B;
+            margin: 0;
+        }
+
+        .action-description {
+            font-size: 0.875rem;
+            color: #64748B;
+            margin: 0;
+        }
+
+        /* Recent Activity */
+        .activity-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.75rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            border: 1px solid #E2E8F0;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .activity-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1E293B;
+            margin: 0;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            min-width: 100px;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #F8FAFC;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .activity-item:hover {
+            background: #F1F5F9;
+        }
+
+        .activity-item-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .activity-item-content {
+            flex: 1;
+        }
+
+        .activity-item-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-item-time {
+            font-size: 0.8125rem;
+            color: #64748B;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            border: 1px solid #E2E8F0;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-items: center;
             justify-content: center;
         }
-        
-        .logout-btn:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            border-color: rgba(255, 255, 255, 0.4);
+
+        .mobile-menu-toggle:hover {
+            background: #F8FAFC;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        
-        .logout-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        .mobile-menu-toggle i {
+            font-size: 1.25rem;
+            color: #1E293B;
         }
-        
-        .logout-btn i {
-            font-size: 1rem;
-            transition: transform 0.3s ease;
-        }
-        
-        .logout-btn:hover i {
-            transform: rotate(10deg);
-        }
-        
-        .welcome-section::before {
-            content: '';
-            position: absolute;
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #00d2ff, transparent);
-            opacity: 0.8;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
-        
-        .dashboard-icon {
-            font-size: 3.5rem;
-            color: #00d2ff;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 4px 8px rgba(0, 210, 255, 0.3);
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .dashboard-title {
-            font-size: 2.8rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            letter-spacing: -1px;
-        }
-        
-        .dashboard-subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            line-height: 1.7;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2rem;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .user-info {
-            background: linear-gradient(135deg, rgba(0, 210, 255, 0.2), rgba(139, 92, 246, 0.2));
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 16px;
-            padding: 1.25rem 2rem;
-            margin-top: 2rem;
-            font-size: 1rem;
-            font-weight: 500;
-            color: white;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .user-info i {
-            font-size: 1.2rem;
-            color: #00d2ff;
-        }
-        
-        .quick-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2.5rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .action-card {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 1.5rem;
-            min-width: 160px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-        }
-        
-        .action-card:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-        }
-        
-        .action-card i {
-            font-size: 2rem;
-            color: #00d2ff;
-            margin-bottom: 0.75rem;
+
+        .sidebar-overlay.active {
+            opacity: 1;
             display: block;
         }
-        
-        .action-card h4 {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: white;
-            margin: 0;
-            opacity: 0.9;
+
+        @media (max-width: 1200px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
         }
-        
-        /* Verification Section Styles */
-        .verification-section {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            width: 100%;
-        }
-        
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            justify-content: center;
-        }
-        
-        .section-title i {
-            font-size: 1.5rem;
-            color: #00d2ff;
-        }
-        
-        .section-title h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: white;
-            margin: 0;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .pending-doctors-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .doctor-card {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-        
-        .doctor-card:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
-        
-        .doctor-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1.5rem;
-        }
-        
-        .doctor-details h4 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: white;
-            margin: 0 0 0.5rem 0;
-        }
-        
-        .doctor-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .doctor-meta span {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.8);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .registration-date {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 0;
-        }
-        
-        .verification-actions {
-            display: flex;
-            gap: 0.75rem;
-            flex-shrink: 0;
-        }
-        
-        .btn-approve, .btn-reject {
-            padding: 0.6rem 1.2rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .btn-approve {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-        }
-        
-        .btn-approve:hover {
-            background: linear-gradient(135deg, #059669, #047857);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
-        }
-        
-        .btn-reject {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-        }
-        
-        .btn-reject:hover {
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
-        }
-        
-        .no-pending-doctors {
-            text-align: center;
-            padding: 3rem 2rem;
-            margin-top: 3rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .no-pending-doctors i {
-            font-size: 3rem;
-            color: #10b981;
-            margin-bottom: 1rem;
-        }
-        
-        .no-pending-doctors p {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin: 0;
-        }
-        
-        /* Responsive Design */
+
         @media (max-width: 768px) {
-            .dashboard-content {
-                padding: 1rem;
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
-            
-            .welcome-section {
-                padding: 2rem 1.5rem;
-                margin: 0.5rem;
+
+            .quick-actions-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
-            
-            .dashboard-title {
-                font-size: 2.2rem;
-            }
-            
-            .dashboard-subtitle {
-                font-size: 1rem;
-            }
-            
-            .action-card {
-                min-width: 140px;
-                padding: 1.25rem;
-            }
-            
-            .quick-actions {
-                gap: 0.75rem;
-            }
-            
-            .doctor-info {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            
-            .doctor-meta {
-                flex-direction: column;
-            }
-            
-            .verification-actions {
-                width: 100%;
-                justify-content: flex-end;
-            }
-            
-            .btn-approve, .btn-reject {
-                padding: 0.5rem 1rem;
-                font-size: 0.8rem;
+
+            .stat-value {
+                font-size: 1.875rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Dashboard Content -->
-    <div class="dashboard-content">
-        <!-- Flash Messages -->
-        <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
-            <div class="alert alert-danger">
-                <i class="fas fa-exclamation-triangle"></i>
-                <%= errorMessage %>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Modern Dashboard Layout -->
+    <div class="modern-dashboard">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div>
+                    <h2 class="sidebar-title">Bizil Health</h2>
+                </div>
             </div>
-        <% } %>
-        
-        <% if (typeof successMessage !== 'undefined' && successMessage) { %>
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i>
-                <%= successMessage %>
-            </div>
-        <% } %>
-        
-        <div class="welcome-section">
-            <div class="section-header">
-                <a href="/admin/logout" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                </a>
-            </div>
-            <div class="brand-header">
-                <i class="fas fa-heartbeat"></i>
-                <h1 class="brand-name">Bizil Health Care</h1>
-            </div>
-            <i class="fas fa-cogs dashboard-icon"></i>
-            <h2 class="dashboard-title">Admin Dashboard</h2>
-            <p class="dashboard-subtitle">
-                Welcome to the system administration panel. Your central command center for managing users, monitoring system performance, and overseeing healthcare operations.
-            </p>
             
-            <% if (typeof user !== 'undefined' && user) { %>
-                <div class="user-info">
-                    <i class="fas fa-user-shield"></i>
-                    Welcome, Admin <%= user.firstName || 'Administrator' %> <%= user.lastName || '' %>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="/admin/dashboard" class="nav-link active">
+                            <i class="fas fa-home nav-icon"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin/patients" class="nav-link">
+                            <i class="fas fa-users nav-icon"></i>
+                            <span>Patients</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin/doctors" class="nav-link">
+                            <i class="fas fa-user-md nav-icon"></i>
+                            <span>Doctors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin/appointments" class="nav-link">
+                            <i class="fas fa-calendar-check nav-icon"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin/departments" class="nav-link">
+                            <i class="fas fa-hospital nav-icon"></i>
+                            <span>Departments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin/health-tips" class="nav-link">
+                            <i class="fas fa-lightbulb nav-icon"></i>
+                            <span>Health Tips</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin/reports" class="nav-link">
+                            <i class="fas fa-chart-line nav-icon"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin/settings" class="nav-link">
+                            <i class="fas fa-cog nav-icon"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" style="margin-top: 2rem;">
+                        <a href="/admin/logout" class="nav-link" style="color: #EF4444;">
+                            <i class="fas fa-sign-out-alt nav-icon"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Header -->
+            <header class="dashboard-header">
+                <div class="welcome-section">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div>
+                            <h1 style="margin-bottom: 0.25rem;">Welcome back, <%= user && user.username ? user.username : 'Admin' %>!</h1>
+                            <p style="margin: 0;">System Overview and Management</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="user-profile">
+                        <div class="user-avatar" style="background: linear-gradient(135deg, #8B5CF6, #6366F1);">
+                            <%= user && user.username ? user.username.charAt(0).toUpperCase() : 'A' %>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name"><%= user && user.username ? user.username : 'Admin' %></div>
+                            <div class="user-role">Administrator</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Alerts -->
+            <% if (typeof successMessage !== 'undefined' && successMessage) { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-bottom: 1.5rem;">
+                    <i class="fas fa-check-circle"></i>
+                    <%= successMessage %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             <% } %>
-            
-            <div class="quick-actions">
-                <div class="action-card">
-                    <i class="fas fa-users-cog"></i>
-                    <h4>User Management</h4>
+
+            <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-bottom: 1.5rem;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <%= errorMessage %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
-                <div class="action-card">
-                    <i class="fas fa-chart-bar"></i>
-                    <h4>Reports</h4>
+            <% } %>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> Active
+                        </div>
+                    </div>
+                    <div class="stat-value"><%= totalPatients || 0 %></div>
+                    <div class="stat-label">Total Patients</div>
                 </div>
-                <div class="action-card">
-                    <i class="fas fa-cog"></i>
-                    <h4>System Settings</h4>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-check-circle"></i> Verified
+                        </div>
+                    </div>
+                    <div class="stat-value"><%= totalDoctors || 0 %></div>
+                    <div class="stat-label">Active Doctors</div>
                 </div>
-                <div class="action-card">
-                    <i class="fas fa-shield-alt"></i>
-                    <h4>Security</h4>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon green">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-calendar"></i> Today
+                        </div>
+                    </div>
+                    <div class="stat-value"><%= appointmentsToday || 0 %></div>
+                    <div class="stat-label">Appointments Today</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <% if (pendingDoctors && pendingDoctors.length > 0) { %>
+                            <div class="stat-trend down">
+                                <i class="fas fa-exclamation-circle"></i> Action
+                            </div>
+                        <% } else { %>
+                            <div class="stat-trend up">
+                                <i class="fas fa-check"></i> Clear
+                            </div>
+                        <% } %>
+                    </div>
+                    <div class="stat-value"><%= pendingDoctors ? pendingDoctors.length : 0 %></div>
+                    <div class="stat-label">Pending Approvals</div>
                 </div>
             </div>
-            
-            <!-- Doctor Verification Section -->
-            <% if (typeof pendingDoctors !== 'undefined' && pendingDoctors.length > 0) { %>
-                <div class="verification-section">
-                    <div class="section-title">
-                        <i class="fas fa-user-md"></i>
-                        <h3>Pending Doctor Verifications (<%= pendingDoctors.length %>)</h3>
-                    </div>
-                    
-                    <div class="pending-doctors-list">
-                        <% pendingDoctors.forEach(doctor => { %>
-                            <div class="doctor-card">
-                                <div class="doctor-info">
-                                    <div class="doctor-details">
-                                        <h4><%= doctor.firstName %> <%= doctor.lastName %></h4>
-                                        <p class="doctor-meta">
-                                            <span><i class="fas fa-envelope"></i> <%= doctor.user.email %></span>
-                                            <span><i class="fas fa-user"></i> <%= doctor.user.username %></span>
-                                            <% if (doctor.specialization) { %>
-                                                <span><i class="fas fa-stethoscope"></i> <%= doctor.specialization %></span>
-                                            <% } %>
-                                        </p>
-                                        <p class="registration-date">
-                                            <i class="fas fa-calendar-alt"></i>
-                                            Registered: <%= new Date(doctor.registrationDate).toLocaleDateString() %>
-                                        </p>
-                                    </div>
-                                    <div class="verification-actions">
-                                        <form method="POST" action="/admin/verify-doctor/<%= doctor._id %>" style="display: inline;">
-                                            <input type="hidden" name="action" value="approve">
-                                            <button type="submit" class="btn-approve">
-                                                <i class="fas fa-check"></i> Approve
-                                            </button>
-                                        </form>
-                                        <form method="POST" action="/admin/verify-doctor/<%= doctor._id %>" style="display: inline;">
-                                            <input type="hidden" name="action" value="reject">
-                                            <button type="submit" class="btn-reject" onclick="return confirm('Are you sure you want to reject this doctor?')">
-                                                <i class="fas fa-times"></i> Reject
-                                            </button>
-                                        </form>
+
+            <!-- Quick Actions -->
+            <div style="margin-bottom: 2rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 600; color: #1E293B; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-bolt" style="color: #8B5CF6;"></i>
+                    Quick Actions
+                </h2>
+                
+                <div class="quick-actions-grid">
+                    <a href="/admin/patients" class="action-card">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #8B5CF6, #6366F1);">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h3 class="action-title">Add Patient</h3>
+                        <p class="action-description">Register new patient</p>
+                    </a>
+
+                    <a href="/admin/doctors" class="action-card">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #3B82F6, #2563EB);">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h3 class="action-title">Add Doctor</h3>
+                        <p class="action-description">Register new doctor</p>
+                    </a>
+
+                    <a href="/admin/appointments" class="action-card">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #10B981, #059669);">
+                            <i class="fas fa-calendar-plus"></i>
+                        </div>
+                        <h3 class="action-title">Schedule</h3>
+                        <p class="action-description">Create appointment</p>
+                    </a>
+
+                    <a href="/admin/health-tips" class="action-card">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3 class="action-title">Health Tips</h3>
+                        <p class="action-description">Manage health tips</p>
+                    </a>
+
+                    <a href="/admin/reports" class="action-card">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #EF4444, #DC2626);">
+                            <i class="fas fa-file-medical"></i>
+                        </div>
+                        <h3 class="action-title">Reports</h3>
+                        <p class="action-description">View system reports</p>
+                    </a>
+
+                    <a href="/admin/settings" class="action-card">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #14B8A6, #0D9488);">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h3 class="action-title">Settings</h3>
+                        <p class="action-description">System configuration</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="activity-card">
+                <div class="activity-header">
+                    <h3>
+                        <i class="fas fa-history" style="color: #8B5CF6;"></i>
+                        Recent Activity
+                    </h3>
+                </div>
+
+                <div class="activity-list">
+                    <% if (recentPatients && recentPatients.length > 0) { %>
+                        <% recentPatients.forEach(patient => { %>
+                            <div class="activity-item">
+                                <div class="activity-item-icon" style="background: linear-gradient(135deg, #8B5CF6, #6366F1); color: white;">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="activity-item-content">
+                                    <div class="activity-item-title">New patient registered: <%= patient.firstName %> <%= patient.lastName %></div>
+                                    <div class="activity-item-time">
+                                        <%= patient.createdAt ? new Date(patient.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Recently' %>
                                     </div>
                                 </div>
                             </div>
                         <% }); %>
-                    </div>
+                    <% } %>
+
+                    <% if (pendingDoctors && pendingDoctors.length > 0) { %>
+                        <% pendingDoctors.slice(0, 2).forEach(doctor => { %>
+                            <div class="activity-item">
+                                <div class="activity-item-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706); color: white;">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <div class="activity-item-content">
+                                    <div class="activity-item-title">Doctor verification pending: Dr. <%= doctor.firstName %> <%= doctor.lastName %></div>
+                                    <div class="activity-item-time">
+                                        <%= doctor.registrationDate ? new Date(doctor.registrationDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Recently' %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } %>
+
+                    <% if (recentAppointments && recentAppointments.length > 0) { %>
+                        <% recentAppointments.slice(0, 2).forEach(appointment => { %>
+                            <div class="activity-item">
+                                <div class="activity-item-icon" style="background: linear-gradient(135deg, #10B981, #059669); color: white;">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="activity-item-content">
+                                    <div class="activity-item-title">
+                                        Appointment: <%= appointment.patient ? (appointment.patient.firstName + ' ' + appointment.patient.lastName) : 'Patient' %> 
+                                        with <%= appointment.doctor ? ('Dr. ' + appointment.doctor.firstName + ' ' + appointment.doctor.lastName) : 'Doctor' %>
+                                    </div>
+                                    <div class="activity-item-time">
+                                        <%= appointment.appointmentDate ? new Date(appointment.appointmentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Scheduled' %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } %>
+
+                    <% if (recentHealthTips && recentHealthTips.length > 0) { %>
+                        <% recentHealthTips.forEach(tip => { %>
+                            <div class="activity-item">
+                                <div class="activity-item-icon" style="background: linear-gradient(135deg, #3B82F6, #2563EB); color: white;">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div class="activity-item-content">
+                                    <div class="activity-item-title">New health tip published: <%= tip.title %></div>
+                                    <div class="activity-item-time">
+                                        <%= tip.createdAt ? new Date(tip.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Recently' %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } %>
+
+                    <% if ((!recentPatients || recentPatients.length === 0) && 
+                           (!pendingDoctors || pendingDoctors.length === 0) && 
+                           (!recentAppointments || recentAppointments.length === 0) &&
+                           (!recentHealthTips || recentHealthTips.length === 0)) { %>
+                        <div class="activity-item">
+                            <div class="activity-item-icon" style="background: linear-gradient(135deg, #64748B, #475569); color: white;">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="activity-item-content">
+                                <div class="activity-item-title">No recent activity to display</div>
+                                <div class="activity-item-time">System is running smoothly</div>
+                            </div>
+                        </div>
+                    <% } %>
                 </div>
-            <% } else { %>
-                <div class="no-pending-doctors">
-                    <i class="fas fa-check-circle"></i>
-                    <p>No pending doctor verifications at this time.</p>
-                </div>
-            <% } %>
-        </div>
+            </div>
+        </main>
     </div>
 
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    overlay.classList.toggle('active');
+                });
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+            }
+
+            // Close sidebar on window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 1200) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

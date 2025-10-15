@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments - Bizil Health Care</title>
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/modern-dashboard.css">
+    <style>
+        body {
+            background: #F8FAFC;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Mobile Menu Toggle Button */
+        .mobile-menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            border: 1px solid #E2E8F0;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            z-index: 997;
+            position: relative;
+        }
+        
+        .mobile-menu-toggle:hover {
+            background: #F8FAFC;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mobile-menu-toggle i {
+            font-size: 1.25rem;
+            color: #1E293B;
+        }
+        
+        /* Mobile Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        @media (max-width: 1200px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .sidebar-overlay {
+                display: none;
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 280px;
+                height: 100vh;
+                z-index: 999;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar.mobile-visible {
+                transform: translateX(0);
+            }
+        }
+        
+        .appointment-table {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            border: 1px solid #E2E8F0;
+        }
+        
+        .appointment-row {
+            border-bottom: 1px solid #E2E8F0;
+            padding: 1.25rem 1.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .appointment-row:hover {
+            background: #F8FAFC;
+        }
+        
+        .appointment-row:last-child {
+            border-bottom: none;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tab {
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            border: 1px solid #E2E8F0;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        
+        .filter-tab:hover {
+            background: #F8FAFC;
+        }
+        
+        .filter-tab.active {
+            background: #8B5CF6;
+            color: white;
+            border-color: #8B5CF6;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div>
+                    <h2 class="sidebar-title">Bizil Health</h2>
+                </div>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="/doctor/dashboard" class="nav-link">
+                            <i class="fas fa-home nav-icon"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/appointments" class="nav-link active">
+                            <i class="fas fa-calendar-alt nav-icon"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/patients" class="nav-link">
+                            <i class="fas fa-users nav-icon"></i>
+                            <span>My Patients</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/prescriptions" class="nav-link">
+                            <i class="fas fa-prescription nav-icon"></i>
+                            <span>Prescriptions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/schedule" class="nav-link">
+                            <i class="fas fa-clock nav-icon"></i>
+                            <span>Schedule</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/complete-profile" class="nav-link">
+                            <i class="fas fa-user-md nav-icon"></i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" style="margin-top: 2rem;">
+                        <a href="/doctor/logout" class="nav-link" style="color: #EF4444;">
+                            <i class="fas fa-sign-out-alt nav-icon"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="dashboard-header" style="margin-bottom: 2rem;">
+                <div class="welcome-section">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div>
+                            <h1 style="margin-bottom: 0.25rem;">My Appointments</h1>
+                            <p style="margin: 0;">Manage your patient appointments</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="user-profile">
+                        <div class="user-avatar" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6);">
+                            <%= (profile && profile.firstName) ? profile.firstName.charAt(0).toUpperCase() : 'D' %>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">Dr. <%= (profile && profile.firstName) ? (profile.firstName + ' ' + (profile.lastName || '')) : 'Doctor' %></div>
+                            <div class="user-role"><%= (profile && profile.specialization) ? profile.specialization : 'Doctor' %></div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">All Appointments</button>
+                <button class="filter-tab" data-filter="today">Today</button>
+                <button class="filter-tab" data-filter="upcoming">Upcoming</button>
+                <button class="filter-tab" data-filter="completed">Completed</button>
+                <button class="filter-tab" data-filter="cancelled">Cancelled</button>
+            </div>
+            
+            <!-- Appointments List -->
+            <div class="appointment-table">
+                <% if (appointments && appointments.length > 0) { %>
+                    <% appointments.forEach(function(appointment) { 
+                        const patient = appointment.patient;
+                        const appointmentDate = new Date(appointment.appointmentDate);
+                        const today = new Date();
+                        
+                        let dateText = appointmentDate.toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric',
+                            year: 'numeric'
+                        });
+                        
+                        let statusClass = appointment.status;
+                        let statusIcon = 'fa-calendar-check';
+                        
+                        if (appointment.status === 'completed') statusIcon = 'fa-check-circle';
+                        if (appointment.status === 'cancelled') statusIcon = 'fa-times-circle';
+                        if (appointment.status === 'confirmed') statusIcon = 'fa-calendar-check';
+                    %>
+                        <div class="appointment-row" data-status="<%= appointment.status %>" data-date="<%= appointmentDate.toISOString() %>">
+                            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 200px;">
+                                    <div style="font-weight: 600; color: #1E293B; margin-bottom: 0.25rem;">
+                                        <%= patient ? patient.firstName + ' ' + patient.lastName : 'Unknown Patient' %>
+                                    </div>
+                                    <div style="font-size: 0.875rem; color: #64748B;">
+                                        <%= appointment.reason || 'General Consultation' %>
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-calendar" style="color: #8B5CF6;"></i>
+                                    <span style="font-size: 0.875rem; color: #1E293B;"><%= dateText %></span>
+                                </div>
+                                
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-clock" style="color: #8B5CF6;"></i>
+                                    <span style="font-size: 0.875rem; color: #1E293B;"><%= appointment.appointmentTime %></span>
+                                </div>
+                                
+                                <div>
+                                    <span class="status-badge <%= statusClass %>">
+                                        <i class="fas <%= statusIcon %>"></i>
+                                        <%= appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1) %>
+                                    </span>
+                                </div>
+                                
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <a href="/doctor/appointments/<%= appointment._id %>" class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                    
+                                    <% if (appointment.status === 'scheduled' || appointment.status === 'confirmed') { %>
+                                        <button class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="completeAppointment('<%= appointment._id %>')">
+                                            <i class="fas fa-check"></i> Complete
+                                        </button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="empty-state" style="padding: 4rem 2rem;">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>No appointments found</p>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('mobile-visible');
+                sidebarOverlay.classList.toggle('active');
+            });
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('mobile-visible');
+                sidebarOverlay.classList.remove('active');
+            });
+        }
+        
+        // Filter functionality
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const appointmentRows = document.querySelectorAll('.appointment-row');
+        
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const filter = tab.dataset.filter;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                appointmentRows.forEach(row => {
+                    const status = row.dataset.status;
+                    const aptDate = new Date(row.dataset.date);
+                    aptDate.setHours(0, 0, 0, 0);
+                    
+                    let show = false;
+                    
+                    if (filter === 'all') {
+                        show = true;
+                    } else if (filter === 'today') {
+                        show = aptDate.getTime() === today.getTime();
+                    } else if (filter === 'upcoming') {
+                        show = aptDate > today && (status === 'scheduled' || status === 'confirmed');
+                    } else {
+                        show = status === filter;
+                    }
+                    
+                    row.style.display = show ? 'block' : 'none';
+                });
+            });
+        });
+        
+        // Complete appointment
+        function completeAppointment(appointmentId) {
+            if (confirm('Mark this appointment as completed?')) {
+                window.location.href = `/doctor/appointments/${appointmentId}/complete`;
+            }
+        }
+    </script>
+</body>
+</html>

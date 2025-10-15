@@ -4,303 +4,1041 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Dashboard - Bizil Health Care</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Font Awesome for icons - Updated to latest version with integrity check -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Fallback to alternative CDN -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" crossorigin="anonymous">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="/css/styles.css">
+    <!-- Modern Dashboard CSS -->
+    <link rel="stylesheet" href="/css/modern-dashboard.css">
     <style>
-        body {
-            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        html, body {
+            height: auto !important;
             min-height: 100vh;
+            overflow-y: scroll !important;
+            overflow-x: hidden;
+        }
+        
+        body {
+            background: #F8FAFC;
             font-family: 'Inter', sans-serif;
             margin: 0;
+            padding: 0;
         }
         
-        .dashboard-content {
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .modern-dashboard {
             min-height: 100vh;
-            justify-content: center;
-        }
-        
-        .welcome-section {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            border-radius: 24px;
-            padding: 3rem 2.5rem;
-            margin: 1rem auto;
-            max-width: 700px;
             width: 100%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center;
+            height: auto;
+        }
+        
+        .main-content {
+            min-height: 100vh;
+            height: auto;
+            box-sizing: border-box;
             position: relative;
-            overflow: hidden;
+            z-index: 1;
+            max-width: 100%;
         }
         
-        .section-header {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            z-index: 10;
+        /* Ensure all interactive elements are clickable */
+        a, button, input, select, textarea, .nav-link, .action-button, .appointment-card, .btn-primary, .btn-secondary {
+            pointer-events: auto !important;
+            cursor: pointer;
         }
         
-        .brand-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .brand-header i {
-            font-size: 2rem;
-            color: #00d2ff;
-        }
-        
-        .brand-header .brand-name {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 0;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .logout-btn {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 0.6rem 1.2rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85rem;
+        /* Mobile Menu Toggle Button */
+        .mobile-menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            border: 1px solid #E2E8F0;
+            background: white;
+            cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
             align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            min-width: 100px;
             justify-content: center;
+            pointer-events: auto;
+            z-index: 1002;
+            position: relative;
         }
         
-        .logout-btn:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            border-color: rgba(255, 255, 255, 0.4);
+        .mobile-menu-toggle:hover {
+            background: #F8FAFC;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
-        .logout-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        .mobile-menu-toggle i {
+            font-size: 1.25rem;
+            color: #1E293B;
         }
         
-        .logout-btn i {
-            font-size: 1rem;
-            transition: transform 0.3s ease;
-        }
-        
-        .logout-btn:hover i {
-            transform: rotate(10deg);
-        }
-        
-        .welcome-section::before {
-            content: '';
-            position: absolute;
+        /* Mobile Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #00d2ff, transparent);
-            opacity: 0.8;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
         }
         
-        .dashboard-icon {
-            font-size: 3.5rem;
-            color: #00d2ff;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 4px 8px rgba(0, 210, 255, 0.3);
-            animation: pulse 2s infinite;
+        .sidebar-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        /* Sidebar Mobile States */
+        .sidebar.mobile-hidden {
+            transform: translateX(-100%);
         }
         
-        .dashboard-title {
-            font-size: 2.8rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            letter-spacing: -1px;
+        .sidebar.mobile-visible {
+            transform: translateX(0);
         }
         
-        .dashboard-subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            line-height: 1.7;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2rem;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .user-info {
-            background: linear-gradient(135deg, rgba(0, 210, 255, 0.2), rgba(139, 92, 246, 0.2));
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 16px;
-            padding: 1.25rem 2rem;
-            margin-top: 2rem;
-            font-size: 1rem;
-            font-weight: 500;
-            color: white;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .user-info i {
-            font-size: 1.2rem;
-            color: #00d2ff;
-        }
-        
-        .quick-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2.5rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .action-card {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
+        .health-metric {
+            background: white;
+            border-radius: 1rem;
             padding: 1.5rem;
-            min-width: 160px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            border: 1px solid #E2E8F0;
         }
         
-        .action-card:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
         }
         
-        .action-card i {
+        .metric-label {
+            font-size: 0.875rem;
+            color: #64748B;
+            font-weight: 500;
+        }
+        
+        .metric-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .metric-value {
             font-size: 2rem;
-            color: #00d2ff;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-change {
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .metric-change.positive {
+            color: #10B981;
+        }
+        
+        .metric-change.negative {
+            color: #EF4444;
+        }
+        
+        .upcoming-section {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+        
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .appointment-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
             margin-bottom: 0.75rem;
+        }
+        
+        .appointment-card:hover {
+            background: #F8FAFC;
+        }
+        
+        .doctor-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .appointment-details {
+            flex: 1;
+        }
+        
+        .doctor-name {
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 0.25rem;
+        }
+        
+        .appointment-specialty {
+            font-size: 0.875rem;
+            color: #64748B;
+        }
+        
+        .appointment-time-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.25rem;
+        }
+        
+        .time-text {
+            font-size: 0.875rem;
+            color: #1E293B;
+            font-weight: 500;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-badge.scheduled {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+        }
+        
+        .status-badge.confirmed {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+        
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .action-button {
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
             display: block;
         }
         
-        .action-card h4 {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: white;
-            margin: 0;
-            opacity: 0.9;
+        .action-button:hover {
+            background: #F8FAFC;
+            border-color: #8B5CF6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            color: inherit;
+            text-decoration: none;
         }
         
-        /* Responsive Design */
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 0.75rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .action-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #1E293B;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #94A3B8;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+            color: #CBD5E1;
+        }
+        
+        .empty-state p {
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 0;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 0;
+            width: 100%;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            border: 1px solid #E2E8F0;
+            transition: all 0.3s ease;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .stat-card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 1400px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1401px) and (max-width: 1600px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .modern-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .sidebar-overlay {
+                display: none;
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 280px;
+                height: 100vh;
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar.mobile-visible {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
         @media (max-width: 768px) {
-            .dashboard-content {
-                padding: 1rem;
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
             }
             
-            .welcome-section {
-                padding: 2rem 1.5rem;
-                margin: 0.5rem;
+            .header-actions {
+                width: 100%;
+                justify-content: flex-end;
             }
             
-            .dashboard-title {
-                font-size: 2.2rem;
+            .search-input {
+                width: 100%;
             }
             
-            .dashboard-subtitle {
-                font-size: 1rem;
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
             
-            .action-card {
-                min-width: 140px;
-                padding: 1.25rem;
-            }
-            
-            .quick-actions {
-                gap: 0.75rem;
+            .quick-actions-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
 </head>
 <body>
-    <!-- Dashboard Content -->
-    <div class="dashboard-content">
-        <div class="welcome-section">
-            <div class="section-header">
-                <a href="/patient/logout" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                </a>
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Modern Dashboard Layout -->
+    <div class="modern-dashboard">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div>
+                    <h2 class="sidebar-title">Bizil Health</h2>
+                </div>
             </div>
-            <div class="brand-header">
-                <i class="fas fa-heartbeat"></i>
-                <h1 class="brand-name">Bizil Health Care</h1>
-            </div>
-            <i class="fas fa-user-injured dashboard-icon"></i>
-            <h2 class="dashboard-title">Patient Dashboard</h2>
-            <p class="dashboard-subtitle">
-                Welcome to your personal healthcare portal. Your secure space for managing appointments, accessing medical records, and staying connected with your healthcare team.
-            </p>
             
-            <% if (typeof user !== 'undefined' && user) { %>
-                <div class="user-info">
-                    <i class="fas fa-user-circle"></i>
-                    Welcome, <%= user.firstName || 'Patient' %> <%= user.lastName || '' %>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="/patient/dashboard" class="nav-link active">
+                            <i class="fas fa-home nav-icon"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/appointments" class="nav-link">
+                            <i class="fas fa-calendar-alt nav-icon"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/search-doctors" class="nav-link">
+                            <i class="fas fa-user-md nav-icon"></i>
+                            <span>Find Doctors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/test-results" class="nav-link">
+                            <i class="fas fa-flask nav-icon"></i>
+                            <span>Test Results</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/prescriptions" class="nav-link">
+                            <i class="fas fa-pills nav-icon"></i>
+                            <span>Prescriptions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/health-tips" class="nav-link">
+                            <i class="fas fa-lightbulb nav-icon"></i>
+                            <span>Health Tips</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/patient/complete-profile" class="nav-link">
+                            <i class="fas fa-user-edit nav-icon"></i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" style="margin-top: 2rem;">
+                        <a href="/patient/logout" class="nav-link" style="color: #EF4444;">
+                            <i class="fas fa-sign-out-alt nav-icon"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="dashboard-header">
+                <div class="welcome-section">
+                    <!-- Mobile Menu Toggle Button - Inside Header -->
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div>
+                            <h1 style="margin-bottom: 0.25rem;">Welcome back, <%= (profile && profile.firstName) ? profile.firstName : ((user && user.username) ? user.username : 'Patient') %>!</h1>
+                            <p style="margin: 0;">Here's your health overview today</p>
+                        </div>
+                    </div>
                 </div>
-            <% } %>
+                
+                <div class="header-actions">
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            <%= (profile && profile.firstName) ? profile.firstName.charAt(0).toUpperCase() : ((user && user.username) ? user.username.charAt(0).toUpperCase() : 'P') %>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name"><%= (profile && profile.firstName) ? (profile.firstName + ' ' + (profile.lastName || '')) : ((user && user.username) ? user.username : 'Patient') %></div>
+                            <div class="user-role">Patient</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
             
-            <div class="quick-actions">
-                <div class="action-card">
-                    <i class="fas fa-calendar-plus"></i>
-                    <h4>Book Appointment</h4>
+            <!-- Body Vitals Section - Full Width -->
+            <div style="background: white; border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); border: 1px solid #E2E8F0; width: 100%; grid-column: 1 / -1;">
+                <h2 style="font-size: 1.25rem; font-weight: 600; color: #1E293B; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-heartbeat" style="color: #8B5CF6;"></i>
+                    Body Vitals
+                </h2>
+            
+                <!-- Health Metrics Stats -->
+                <% 
+                    // Get vitals from profile or use defaults
+                    const heartRate = (profile && profile.healthProfile && profile.healthProfile.vitalSigns && profile.healthProfile.vitalSigns.heartRate) 
+                        ? profile.healthProfile.vitalSigns.heartRate 
+                        : 72;
+                    
+                    const weight = (profile && profile.healthProfile && profile.healthProfile.weight && profile.healthProfile.weight.value) 
+                        ? profile.healthProfile.weight.value 
+                        : 68;
+                    
+                    const oxygenLevel = (profile && profile.healthProfile && profile.healthProfile.vitalSigns && profile.healthProfile.vitalSigns.oxygenSaturation) 
+                        ? profile.healthProfile.vitalSigns.oxygenSaturation 
+                        : 98;
+                    
+                    const bloodPressureSystolic = (profile && profile.healthProfile && profile.healthProfile.vitalSigns && profile.healthProfile.vitalSigns.bloodPressure && profile.healthProfile.vitalSigns.bloodPressure.systolic) 
+                        ? profile.healthProfile.vitalSigns.bloodPressure.systolic 
+                        : 120;
+                    
+                    const bloodPressureDiastolic = (profile && profile.healthProfile && profile.healthProfile.vitalSigns && profile.healthProfile.vitalSigns.bloodPressure && profile.healthProfile.vitalSigns.bloodPressure.diastolic) 
+                        ? profile.healthProfile.vitalSigns.bloodPressure.diastolic 
+                        : 80;
+                    
+                    const hasRealData = (profile && profile.healthProfile && profile.healthProfile.vitalSigns && profile.healthProfile.vitalSigns.lastRecorded);
+                %>
+                
+                <div class="stats-grid" style="margin-bottom: 0;">
+                    <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> Normal
+                        </div>
+                    </div>
+                    <div class="stat-value"><%= heartRate %> bpm</div>
+                    <div class="stat-label">Heart Rate <%= !hasRealData ? '(Default)' : '' %></div>
                 </div>
-                <div class="action-card">
-                    <i class="fas fa-file-medical"></i>
-                    <h4>Medical Records</h4>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-weight"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> +2%
+                        </div>
+                    </div>
+                    <div class="stat-value"><%= weight %> kg</div>
+                    <div class="stat-label">Body Weight <%= !hasRealData ? '(Default)' : '' %></div>
                 </div>
-                <div class="action-card">
-                    <i class="fas fa-pills"></i>
-                    <h4>Prescriptions</h4>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon teal">
+                            <i class="fas fa-lungs"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-check"></i> Good
+                        </div>
+                    </div>
+                    <div class="stat-value"><%= oxygenLevel %>%</div>
+                    <div class="stat-label">Oxygen Level <%= !hasRealData ? '(Default)' : '' %></div>
                 </div>
-                <div class="action-card">
-                    <i class="fas fa-user-md"></i>
-                    <h4>My Doctors</h4>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon pink">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> Normal
+                        </div>
+                    </div>
+                    <div class="stat-value"><%= bloodPressureSystolic %>/<%= bloodPressureDiastolic %></div>
+                    <div class="stat-label">Blood Pressure <%= !hasRealData ? '(Default)' : '' %></div>
+                </div>
+                </div>
+                
+                <% if (!hasRealData) { %>
+                <div style="margin-top: 1rem; padding: 1rem; background: #FEF3C7; border-radius: 0.75rem; border: 1px solid #FCD34D;">
+                    <p style="margin: 0; font-size: 0.875rem; color: #92400E; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Update your body vitals in <a href="/patient/complete-profile" style="color: #B45309; font-weight: 600; text-decoration: underline;">your profile</a> for accurate health tracking.</span>
+                    </p>
+                </div>
+                <% } %>
+            </div>
+            
+            <!-- Content Grid -->
+            <div class="content-grid">
+                <!-- Upcoming Appointments -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-calendar-check"></i>
+                            Upcoming Appointments
+                        </h3>
+                        <a href="/patient/appointments" class="card-action">View All <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="appointment-list">
+                        <% if (typeof appointments !== 'undefined' && appointments && appointments.length > 0) { %>
+                            <% appointments.forEach(function(appointment) { 
+                                const doctor = appointment.doctor;
+                                const doctorInitials = doctor ? (doctor.firstName.charAt(0) + doctor.lastName.charAt(0)).toUpperCase() : 'DR';
+                                const appointmentDate = new Date(appointment.appointmentDate);
+                                const today = new Date();
+                                const tomorrow = new Date(today);
+                                tomorrow.setDate(tomorrow.getDate() + 1);
+                                
+                                let dateText = appointmentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                                if (appointmentDate.toDateString() === today.toDateString()) {
+                                    dateText = 'Today';
+                                } else if (appointmentDate.toDateString() === tomorrow.toDateString()) {
+                                    dateText = 'Tomorrow';
+                                }
+                            %>
+                                <div class="appointment-card">
+                                    <div class="doctor-avatar"><%= doctorInitials %></div>
+                                    <div class="appointment-details">
+                                        <div class="doctor-name">Dr. <%= doctor ? doctor.firstName + ' ' + doctor.lastName : 'Unknown' %></div>
+                                        <div class="appointment-specialty"><%= doctor && doctor.specialization ? doctor.specialization : 'General' %></div>
+                                    </div>
+                                    <div class="appointment-time-badge">
+                                        <div class="time-text"><%= dateText %>, <%= appointment.appointmentTime %></div>
+                                        <span class="status-badge <%= appointment.status === 'confirmed' ? 'confirmed' : 'scheduled' %>">
+                                            <%= appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1) %>
+                                        </span>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <!-- Empty State -->
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-times"></i>
+                                <p>No upcoming appointments</p>
+                            </div>
+                        <% } %>
+                    </div>
+                    
+                    <a href="/patient/search-doctors" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+                        <i class="fas fa-plus"></i>
+                        Book New Appointment
+                    </a>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-bolt"></i>
+                            Quick Actions
+                        </h3>
+                    </div>
+                    
+                    <div class="quick-actions-grid">
+                        <a href="/patient/prescriptions" class="action-button">
+                            <div class="action-icon purple">
+                                <i class="fas fa-pills"></i>
+                            </div>
+                            <div class="action-label">Prescriptions</div>
+                        </a>
+                        
+                        <a href="/patient/test-results" class="action-button">
+                            <div class="action-icon blue">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <div class="action-label">Test Results</div>
+                        </a>
+                        
+                        <a href="/patient/health-tips" class="action-button">
+                            <div class="action-icon teal">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="action-label">Health Tips</div>
+                        </a>
+                        
+                        <a href="/patient/complete-profile" class="action-button">
+                            <div class="action-icon pink">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <div class="action-label">Update Profile</div>
+                        </a>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #E2E8F0;">
+                        <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #1E293B;">
+                            <i class="fas fa-capsules"></i> Daily Supplements
+                        </h4>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <%
+                            // Check if supplements are tracked today
+                            const vitaminDTaken = medicationTracking && medicationTracking.supplements.find(s => s.name === 'Vitamin D')?.taken || false;
+                            const omega3Taken = medicationTracking && medicationTracking.supplements.find(s => s.name === 'Omega-3')?.taken || false;
+                            const multivitaminTaken = medicationTracking && medicationTracking.supplements.find(s => s.name === 'Multivitamin')?.taken || false;
+                            %>
+                            <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: #F8FAFC; border-radius: 0.5rem;">
+                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05)); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: #8B5CF6;">
+                                    <i class="fas fa-capsules"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; color: #1E293B; font-size: 0.875rem;">Vitamin D</div>
+                                    <div style="font-size: 0.75rem; color: #64748B;">1 capsule • Morning</div>
+                                </div>
+                                <input type="checkbox" class="supplement-checkbox" data-name="Vitamin D" data-type="supplement" <%= vitaminDTaken ? 'checked' : '' %> style="width: 20px; height: 20px; cursor: pointer;">
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: #F8FAFC; border-radius: 0.5rem;">
+                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05)); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: #3B82F6;">
+                                    <i class="fas fa-tablets"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; color: #1E293B; font-size: 0.875rem;">Omega-3</div>
+                                    <div style="font-size: 0.75rem; color: #64748B;">2 capsules • Evening</div>
+                                </div>
+                                <input type="checkbox" class="supplement-checkbox" data-name="Omega-3" data-type="supplement" <%= omega3Taken ? 'checked' : '' %> style="width: 20px; height: 20px; cursor: pointer;">
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: #F8FAFC; border-radius: 0.5rem;">
+                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(20, 184, 166, 0.05)); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: #14B8A6;">
+                                    <i class="fas fa-pills"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; color: #1E293B; font-size: 0.875rem;">Multivitamin</div>
+                                    <div style="font-size: 0.75rem; color: #64748B;">1 tablet • Morning</div>
+                                </div>
+                                <input type="checkbox" class="supplement-checkbox" data-name="Multivitamin" data-type="supplement" <%= multivitaminTaken ? 'checked' : '' %> style="width: 20px; height: 20px; cursor: pointer;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Prescribed Medications -->
+                    <% if (typeof prescriptions !== 'undefined' && prescriptions && prescriptions.length > 0) { %>
+                        <%
+                            // Get all current medications from active prescriptions
+                            let currentMedications = [];
+                            prescriptions.forEach(prescription => {
+                                if (prescription.medications && prescription.medications.length > 0) {
+                                    prescription.medications.forEach(med => {
+                                        currentMedications.push({
+                                            name: med.name,
+                                            strength: med.strength,
+                                            dosage: med.dosage,
+                                            doctor: prescription.doctor,
+                                            prescriptionDate: prescription.prescriptionDate
+                                        });
+                                    });
+                                }
+                            });
+                        %>
+                        
+                        <% if (currentMedications.length > 0) { %>
+                        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #E2E8F0;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                                <h4 style="font-size: 1rem; font-weight: 600; margin: 0; color: #1E293B;">
+                                    <i class="fas fa-prescription-bottle"></i> Prescribed Medications
+                                </h4>
+                                <% if (currentMedications.length > 3) { %>
+                                <button id="toggleMedicationsBtn" style="font-size: 0.75rem; color: #8B5CF6; background: none; border: none; cursor: pointer; font-weight: 500; padding: 0.25rem 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
+                                    <span id="toggleMedicationsText">View All (<%= currentMedications.length %>)</span> <i id="toggleMedicationsIcon" class="fas fa-chevron-down" style="font-size: 0.6rem;"></i>
+                                </button>
+                                <% } else { %>
+                                <a href="/patient/prescriptions" style="font-size: 0.75rem; color: #8B5CF6; text-decoration: none; font-weight: 500;">
+                                    View All <i class="fas fa-arrow-right" style="font-size: 0.6rem;"></i>
+                                </a>
+                                <% } %>
+                            </div>
+                            
+                            <div id="medicationsList" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                <% 
+                                const iconColors = [
+                                    { bg: 'rgba(239, 68, 68, 0.1)', color: '#EF4444', icon: 'fa-prescription-bottle-alt' },
+                                    { bg: 'rgba(249, 115, 22, 0.1)', color: '#F97316', icon: 'fa-prescription' },
+                                    { bg: 'rgba(236, 72, 153, 0.1)', color: '#EC4899', icon: 'fa-pills' },
+                                    { bg: 'rgba(168, 85, 247, 0.1)', color: '#A855F7', icon: 'fa-tablets' },
+                                    { bg: 'rgba(99, 102, 241, 0.1)', color: '#6366F1', icon: 'fa-capsules' }
+                                ];
+                                
+                                currentMedications.forEach((med, index) => { 
+                                    const colorScheme = iconColors[index % iconColors.length];
+                                    const isHidden = index >= 3;
+                                    
+                                    // Parse frequency to show specific times of day
+                                    const frequency = med.dosage && med.dosage.frequency ? med.dosage.frequency.toLowerCase() : '';
+                                    const quantity = med.dosage && med.dosage.quantity ? med.dosage.quantity : '';
+                                    
+                                    let timesOfDay = [];
+                                    // Check for common frequency patterns - improved detection
+                                    if (frequency.includes('once') || (frequency.includes('1') && frequency.includes('time'))) {
+                                        timesOfDay = ['Morning'];
+                                    } else if (frequency.includes('twice') || (frequency.includes('2') && frequency.includes('time'))) {
+                                        timesOfDay = ['Morning', 'Evening'];
+                                    } else if (frequency.includes('thrice') || (frequency.includes('3') && frequency.includes('time'))) {
+                                        timesOfDay = ['Morning', 'Afternoon', 'Evening'];
+                                    } else if (frequency.includes('4') && frequency.includes('time')) {
+                                        timesOfDay = ['Morning', 'Afternoon', 'Evening', 'Night'];
+                                    } else if (frequency.includes('every 8 hour')) {
+                                        timesOfDay = ['Morning', 'Afternoon', 'Night'];
+                                    } else if (frequency.includes('every 6 hour')) {
+                                        timesOfDay = ['Morning', 'Afternoon', 'Evening', 'Night'];
+                                    } else if (frequency.includes('every 12 hour')) {
+                                        timesOfDay = ['Morning', 'Night'];
+                                    } else if (frequency.includes('bedtime') || frequency.includes('at night')) {
+                                        timesOfDay = ['Night'];
+                                    } else if (frequency.includes('morning')) {
+                                        timesOfDay = ['Morning'];
+                                    } else if (frequency.includes('evening')) {
+                                        timesOfDay = ['Evening'];
+                                    } else if (frequency.includes('afternoon')) {
+                                        timesOfDay = ['Afternoon'];
+                                    } else if (frequency) {
+                                        // If frequency exists but doesn't match patterns, show it as is
+                                        timesOfDay = [frequency.charAt(0).toUpperCase() + frequency.slice(1)];
+                                    } else {
+                                        timesOfDay = ['As directed'];
+                                    }
+                                    
+                                    const timing = med.dosage && med.dosage.timing ? med.dosage.timing.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : '';
+                                    const timesDisplay = timesOfDay.join(' • ');
+                                    const displayText = `${quantity ? quantity + ' • ' : ''}${timesDisplay}${timing && timing !== 'Anytime' ? ' • ' + timing : ''}`;
+                                    
+                                    // Check if this medication is tracked today - match by name and strength
+                                    const medKey = med.strength ? `${med.name} - ${med.strength}` : med.name;
+                                    let isTaken = false;
+                                    if (medicationTracking && medicationTracking.medications) {
+                                        const trackedMed = medicationTracking.medications.find(m => {
+                                            return m.medicationName === medKey || 
+                                                   m.medicationName === med.name ||
+                                                   (m.medicationName && m.medicationName.includes(med.name));
+                                        });
+                                        isTaken = trackedMed ? trackedMed.taken : false;
+                                    }
+                                %>
+                                <div class="medication-item" style="display: <%= isHidden ? 'none' : 'flex' %>; align-items: center; gap: 1rem; padding: 0.75rem; background: #F8FAFC; border-radius: 0.5rem; border-left: 3px solid <%= colorScheme.color %>;">
+                                    <div style="width: 40px; height: 40px; background: <%= colorScheme.bg %>; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: <%= colorScheme.color %>;">
+                                        <i class="fas <%= colorScheme.icon %>"></i>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 500; color: #1E293B; font-size: 0.875rem;">
+                                            <%= med.name %> <%= med.strength ? '- ' + med.strength : '' %>
+                                        </div>
+                                        <div style="font-size: 0.75rem; color: #64748B;">
+                                            <%= displayText || 'As directed' %>
+                                        </div>
+                                        <% if (med.doctor) { %>
+                                        <div style="font-size: 0.7rem; color: #94A3B8; margin-top: 0.25rem;">
+                                            <i class="fas fa-user-md" style="font-size: 0.65rem;"></i> Dr. <%= med.doctor.firstName %> <%= med.doctor.lastName %>
+                                        </div>
+                                        <% } %>
+                                    </div>
+                                    <input type="checkbox" class="medication-checkbox" data-name="<%= med.strength ? med.name + ' - ' + med.strength : med.name %>" data-type="prescription" <%= isTaken ? 'checked' : '' %> style="width: 20px; height: 20px; cursor: pointer;">
+                                </div>
+                                <% }); %>
+                            </div>
+                        </div>
+                        <% } %>
+                    <% } %>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile Menu Toggle Functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        // Toggle menu function
+        function toggleMenu() {
+            sidebar.classList.toggle('mobile-visible');
+            sidebarOverlay.classList.toggle('active');
+            
+            // Change icon
+            const icon = mobileMenuToggle.querySelector('i');
+            if (sidebar.classList.contains('mobile-visible')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+        
+        // Close menu function
+        function closeMenu() {
+            sidebar.classList.remove('mobile-visible');
+            sidebarOverlay.classList.remove('active');
+            const icon = mobileMenuToggle.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+        
+        // Event listeners
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', toggleMenu);
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', closeMenu);
+        }
+        
+        // Close menu when clicking on nav links (mobile)
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 1200) {
+                    closeMenu();
+                }
+            });
+        });
+        
+        // Toggle Medications List
+        const toggleMedicationsBtn = document.getElementById('toggleMedicationsBtn');
+        if (toggleMedicationsBtn) {
+            let isExpanded = false;
+            toggleMedicationsBtn.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent any default action
+                const medicationItems = document.querySelectorAll('.medication-item');
+                const textEl = document.getElementById('toggleMedicationsText');
+                const iconEl = document.getElementById('toggleMedicationsIcon');
+                
+                if (!isExpanded) {
+                    // Show all medications
+                    medicationItems.forEach(item => {
+                        item.style.display = 'flex';
+                    });
+                    textEl.textContent = 'Show Less';
+                    iconEl.className = 'fas fa-chevron-up';
+                    isExpanded = true;
+                } else {
+                    // Hide medications after first 3
+                    medicationItems.forEach((item, index) => {
+                        if (index >= 3) {
+                            item.style.display = 'none';
+                        }
+                    });
+                    const totalMeds = medicationItems.length;
+                    textEl.textContent = `View All (${totalMeds})`;
+                    iconEl.className = 'fas fa-chevron-down';
+                    isExpanded = false;
+                }
+            });
+        }
+        
+        // Medication Tracking - Handle checkbox changes
+        function handleMedicationCheckbox(checkbox) {
+            const medicationName = checkbox.dataset.name;
+            const type = checkbox.dataset.type;
+            const taken = checkbox.checked;
+            
+            // Save to server
+            fetch('/api/patient/medication-tracking/toggle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    medicationName,
+                    type,
+                    taken
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Medication tracking updated:', data);
+                } else {
+                    console.error('Error updating medication tracking:', data.message);
+                    // Revert checkbox on error
+                    checkbox.checked = !taken;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Revert checkbox on error
+                checkbox.checked = !taken;
+            });
+        }
+        
+        // Add event listeners to all medication checkboxes
+        document.querySelectorAll('.medication-checkbox, .supplement-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                handleMedicationCheckbox(this);
+            });
+        });
+        
+        // Close menu on window resize if screen becomes large
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1200) {
+                closeMenu();
+            }
+        });
+        
+        console.log('Patient Dashboard loaded successfully');
+    </script>
 </body>
 </html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Admin</title>
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/modern-dashboard.css">
+    <style>
+        body { background: #F8FAFC; font-family: 'Inter', sans-serif; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: white; border-radius: 1rem; padding: 1.75rem; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); border: 1px solid #E2E8F0; }
+        .stat-value { font-size: 2.5rem; font-weight: 700; color: #1E293B; margin-bottom: 0.5rem; }
+        .stat-label { font-size: 0.9375rem; color: #64748B; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="modern-dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header"><div class="sidebar-logo"><i class="fas fa-heartbeat"></i></div><div><h2 class="sidebar-title">Bizil Health</h2></div></div>
+            <nav><ul class="nav-menu">
+                <li class="nav-item"><a href="/admin/dashboard" class="nav-link"><i class="fas fa-home nav-icon"></i><span>Dashboard</span></a></li>
+                <li class="nav-item"><a href="/admin/patients" class="nav-link"><i class="fas fa-users nav-icon"></i><span>Patients</span></a></li>
+                <li class="nav-item"><a href="/admin/doctors" class="nav-link"><i class="fas fa-user-md nav-icon"></i><span>Doctors</span></a></li>
+                <li class="nav-item"><a href="/admin/appointments" class="nav-link"><i class="fas fa-calendar-check nav-icon"></i><span>Appointments</span></a></li>
+                <li class="nav-item"><a href="/admin/departments" class="nav-link"><i class="fas fa-hospital nav-icon"></i><span>Departments</span></a></li>
+                <li class="nav-item"><a href="/admin/health-tips" class="nav-link"><i class="fas fa-lightbulb nav-icon"></i><span>Health Tips</span></a></li>
+                <li class="nav-item"><a href="/admin/reports" class="nav-link active"><i class="fas fa-chart-line nav-icon"></i><span>Reports</span></a></li>
+                <li class="nav-item"><a href="/admin/settings" class="nav-link"><i class="fas fa-cog nav-icon"></i><span>Settings</span></a></li>
+                <li class="nav-item" style="margin-top: 2rem;"><a href="/patient/logout" class="nav-link" style="color: #EF4444;"><i class="fas fa-sign-out-alt nav-icon"></i><span>Logout</span></a></li>
+            </ul></nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div class="welcome-section"><div style="display: flex; align-items: center; gap: 1rem;"><button class="mobile-menu-toggle" id="mobileMenuToggle"><i class="fas fa-bars"></i></button><div><h1>System Reports</h1><p style="margin: 0;">Analytics and statistics</p></div></div></div>
+                <div class="header-actions"><div class="user-profile"><div class="user-avatar" style="background: linear-gradient(135deg, #8B5CF6, #6366F1);"><%= user.username.charAt(0).toUpperCase() %></div><div class="user-info"><div class="user-name"><%= user.username %></div><div class="user-role">Administrator</div></div></div></div>
+            </header>
+
+            <h2 style="font-size: 1.5rem; font-weight: 600; color: #1E293B; margin-bottom: 1.5rem;">Overall Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon purple" style="width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #8B5CF6, #6366F1); color: white; font-size: 1.75rem; margin-bottom: 1rem;"><i class="fas fa-users"></i></div>
+                    <div class="stat-value"><%= stats.totalPatients %></div>
+                    <div class="stat-label">Total Patients</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue" style="width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #3B82F6, #2563EB); color: white; font-size: 1.75rem; margin-bottom: 1rem;"><i class="fas fa-user-md"></i></div>
+                    <div class="stat-value"><%= stats.totalDoctors %></div>
+                    <div class="stat-label">Active Doctors</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green" style="width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #10B981, #059669); color: white; font-size: 1.75rem; margin-bottom: 1rem;"><i class="fas fa-calendar-check"></i></div>
+                    <div class="stat-value"><%= stats.totalAppointments %></div>
+                    <div class="stat-label">Total Appointments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon teal" style="width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #14B8A6, #0D9488); color: white; font-size: 1.75rem; margin-bottom: 1rem;"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-value"><%= stats.completedAppointments %></div>
+                    <div class="stat-label">Completed</div>
+                </div>
+            </div>
+
+            <h2 style="font-size: 1.5rem; font-weight: 600; color: #1E293B; margin-bottom: 1.5rem;">This Month</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" style="color: #8B5CF6;"><%= stats.monthlyPatients %></div>
+                    <div class="stat-label">New Patients</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: #3B82F6;"><%= stats.monthlyAppointments %></div>
+                    <div class="stat-label">New Appointments</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        if (mobileMenuToggle) mobileMenuToggle.addEventListener('click', () => { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); });
+        if (overlay) overlay.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
+    </script>
+</body>
+</html>

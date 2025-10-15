@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Schedule - Bizil Health Care</title>
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/modern-dashboard.css">
+    <style>
+        body {
+            background: #F8FAFC;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Mobile Menu Toggle Button */
+        .mobile-menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            border: 1px solid #E2E8F0;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            z-index: 997;
+            position: relative;
+        }
+        
+        .mobile-menu-toggle:hover {
+            background: #F8FAFC;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mobile-menu-toggle i {
+            font-size: 1.25rem;
+            color: #1E293B;
+        }
+        
+        /* Mobile Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        @media (max-width: 1200px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .sidebar-overlay {
+                display: none;
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 280px;
+                height: 100vh;
+                z-index: 999;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar.mobile-visible {
+                transform: translateX(0);
+            }
+        }
+        
+        .schedule-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            border: 1px solid #E2E8F0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .day-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            border: 1px solid #E2E8F0;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
+        }
+        
+        .day-card:hover {
+            border-color: #8B5CF6;
+        }
+        
+        .time-slot {
+            background: #F8FAFC;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #CBD5E1;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #8B5CF6;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div>
+                    <h2 class="sidebar-title">Bizil Health</h2>
+                </div>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="/doctor/dashboard" class="nav-link">
+                            <i class="fas fa-home nav-icon"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/appointments" class="nav-link">
+                            <i class="fas fa-calendar-alt nav-icon"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/patients" class="nav-link">
+                            <i class="fas fa-users nav-icon"></i>
+                            <span>My Patients</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/prescriptions" class="nav-link">
+                            <i class="fas fa-prescription nav-icon"></i>
+                            <span>Prescriptions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/schedule" class="nav-link active">
+                            <i class="fas fa-clock nav-icon"></i>
+                            <span>Schedule</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/complete-profile" class="nav-link">
+                            <i class="fas fa-user-md nav-icon"></i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" style="margin-top: 2rem;">
+                        <a href="/doctor/logout" class="nav-link" style="color: #EF4444;">
+                            <i class="fas fa-sign-out-alt nav-icon"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="dashboard-header" style="margin-bottom: 2rem;">
+                <div class="welcome-section">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div>
+                            <h1 style="margin-bottom: 0.25rem;">My Schedule</h1>
+                            <p style="margin: 0;">Manage your availability and working hours</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="user-profile">
+                        <div class="user-avatar" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6);">
+                            <%= (profile && profile.firstName) ? profile.firstName.charAt(0).toUpperCase() : 'D' %>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">Dr. <%= (profile && profile.firstName) ? (profile.firstName + ' ' + (profile.lastName || '')) : 'Doctor' %></div>
+                            <div class="user-role"><%= (profile && profile.specialization) ? profile.specialization : 'Doctor' %></div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Profile Summary Cards -->
+            <div class="row" style="margin-bottom: 2rem;">
+                <!-- Consultation Fee Card -->
+                <div class="col-md-6 mb-3">
+                    <div class="schedule-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem;">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">
+                                <i class="fas fa-rupee-sign" style="font-size: 2.5rem;"></i>
+                                <% if (profile && profile.consultationFee && profile.consultationFee.inPerson) { %>
+                                    <%= profile.consultationFee.inPerson %>
+                                <% } else { %>
+                                    <span style="font-size: 2rem;">Not Set</span>
+                                <% } %>
+                            </div>
+                            <div style="font-size: 1.125rem; opacity: 0.9; font-weight: 500;">Consultation Fee</div>
+                        </div>
+                        
+                        <% if (profile && profile.consultationFee && (profile.consultationFee.inPerson || profile.consultationFee.online || profile.consultationFee.followUp)) { %>
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 1rem; font-size: 0.875rem;">
+                                <% if (profile.consultationFee.inPerson) { %>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span><i class="fas fa-clinic-medical"></i> In-Person:</span>
+                                        <strong>₹<%= profile.consultationFee.inPerson %></strong>
+                                    </div>
+                                <% } %>
+                                <% if (profile.consultationFee.online) { %>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span><i class="fas fa-video"></i> Online:</span>
+                                        <strong>₹<%= profile.consultationFee.online %></strong>
+                                    </div>
+                                <% } %>
+                                <% if (profile.consultationFee.followUp) { %>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span><i class="fas fa-redo"></i> Follow-Up:</span>
+                                        <strong>₹<%= profile.consultationFee.followUp %></strong>
+                                    </div>
+                                <% } %>
+                            </div>
+                        <% } %>
+                        
+                        <% if (!profile || !profile.consultationFee || !profile.consultationFee.inPerson) { %>
+                            <a href="/doctor/profile" class="btn btn-light btn-sm w-100" style="margin-top: 1rem;">
+                                <i class="fas fa-edit"></i> Set Consultation Fees
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <!-- Availability Card -->
+                <div class="col-md-6 mb-3">
+                    <div class="schedule-card" style="text-align: center; padding: 2rem;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">
+                            <i class="fas fa-calendar-check" style="color: #F59E0B;"></i>
+                        </div>
+                        <h3 style="font-size: 1.25rem; font-weight: 600; color: #1E293B; margin-bottom: 0.5rem;">
+                            <i class="fas fa-calendar-week"></i> Availability
+                        </h3>
+                        <div style="font-size: 0.875rem; color: #64748B; margin-bottom: 0.5rem;">
+                            <strong>Schedule:</strong> 
+                            <% if (profile && profile.availability && profile.availability.schedule && profile.availability.schedule.length > 0) { %>
+                                <span style="color: #10B981; font-weight: 600;">Active</span>
+                            <% } else { %>
+                                <span style="color: #EF4444; font-weight: 600;">Not set</span>
+                            <% } %>
+                        </div>
+                        <p style="font-size: 0.75rem; color: #94A3B8; margin: 0;">Set your working hours below</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Schedule Settings -->
+            <div class="schedule-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.25rem; font-weight: 600; color: #1E293B; margin: 0;">
+                        <i class="fas fa-calendar-week" style="color: #8B5CF6;"></i>
+                        Weekly Schedule
+                    </h2>
+                    
+                    <button class="btn-primary" onclick="saveSchedule()">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+                
+                <!-- Days of Week -->
+                <% 
+                    const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                    const defaultShifts = {
+                        'Monday': [{start: '09:00', end: '17:00'}],
+                        'Tuesday': [{start: '09:00', end: '17:00'}],
+                        'Wednesday': [{start: '09:00', end: '17:00'}],
+                        'Thursday': [{start: '09:00', end: '17:00'}],
+                        'Friday': [{start: '09:00', end: '17:00'}],
+                        'Saturday': [{start: '10:00', end: '14:00'}],
+                        'Sunday': []
+                    };
+                    
+                    // Get existing schedule from profile.availability.schedule
+                    const existingSchedule = (profile && profile.availability && profile.availability.schedule) || [];
+                    const scheduleMap = {};
+                    existingSchedule.forEach(day => {
+                        scheduleMap[day.dayOfWeek] = day.shifts || [];
+                    });
+                %>
+                
+                <% daysOfWeek.forEach(function(day) { 
+                    const dayLower = day.toLowerCase();
+                    const shifts = scheduleMap[dayLower] || defaultShifts[day];
+                    const isActive = shifts && shifts.length > 0;
+                %>
+                    <div class="day-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" class="day-toggle" data-day="<%= dayLower %>" <%= isActive ? 'checked' : '' %>>
+                                    <span class="slider"></span>
+                                </label>
+                                
+                                <div>
+                                    <div style="font-weight: 600; color: #1E293B;"><%= day %></div>
+                                    <div style="font-size: 0.875rem; color: #64748B;">
+                                        <%= isActive ? (shifts.length + ' shift(s)') : 'Not available' %>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <% if (isActive) { %>
+                                <button class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="addShift('<%= dayLower %>')">
+                                    <i class="fas fa-plus"></i> Add Shift
+                                </button>
+                            <% } %>
+                        </div>
+                        
+                        <% if (isActive) { %>
+                            <div id="shifts-<%= dayLower %>">
+                                <% shifts.forEach(function(shift, index) { %>
+                                    <div class="time-slot">
+                                        <div style="display: flex; gap: 1rem; align-items: center; flex: 1;">
+                                            <div>
+                                                <label style="font-size: 0.75rem; color: #64748B;">Start Time</label>
+                                                <input type="time" value="<%= shift.startTime || shift.start || '09:00' %>" 
+                                                       class="form-control" style="width: 120px; font-size: 0.875rem;">
+                                            </div>
+                                            
+                                            <div>
+                                                <label style="font-size: 0.75rem; color: #64748B;">End Time</label>
+                                                <input type="time" value="<%= shift.endTime || shift.end || '17:00' %>" 
+                                                       class="form-control" style="width: 120px; font-size: 0.875rem;">
+                                            </div>
+                                            
+                                            <div>
+                                                <label style="font-size: 0.75rem; color: #64748B;">Max Patients</label>
+                                                <input type="number" value="<%= shift.maxPatients || 20 %>" 
+                                                       class="form-control" style="width: 100px; font-size: 0.875rem;" min="1" max="50">
+                                            </div>
+                                        </div>
+                                        
+                                        <button class="btn-secondary" style="padding: 0.5rem; font-size: 0.875rem;" onclick="removeShift(this)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        <% } %>
+                    </div>
+                <% }); %>
+            </div>
+            
+            <!-- Leave Requests -->
+            <div class="schedule-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.25rem; font-weight: 600; color: #1E293B; margin: 0;">
+                        <i class="fas fa-calendar-times" style="color: #EF4444;"></i>
+                        Unavailable Dates & Leave
+                    </h2>
+                    
+                    <button class="btn-secondary" onclick="addLeave()">
+                        <i class="fas fa-plus"></i> Mark Unavailable
+                    </button>
+                </div>
+                
+                <% if (profile && profile.availability && profile.availability.unavailableDates && profile.availability.unavailableDates.length > 0) { %>
+                    <% profile.availability.unavailableDates.forEach(function(leave) { 
+                        const leaveDate = new Date(leave.date);
+                    %>
+                        <div class="time-slot">
+                            <div>
+                                <div style="font-weight: 600; color: #1E293B; margin-bottom: 0.25rem;">
+                                    <%= leaveDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %>
+                                </div>
+                                <div style="font-size: 0.875rem; color: #64748B;">
+                                    <%= leave.reason || 'No reason specified' %>
+                                </div>
+                            </div>
+                            
+                            <button class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="empty-state" style="padding: 2rem 1rem;">
+                        <i class="fas fa-calendar-check" style="font-size: 2rem;"></i>
+                        <p style="font-size: 0.875rem;">No unavailable dates marked</p>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('mobile-visible');
+                sidebarOverlay.classList.toggle('active');
+            });
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('mobile-visible');
+                sidebarOverlay.classList.remove('active');
+            });
+        }
+        
+        // Day toggle functionality
+        const dayToggles = document.querySelectorAll('.day-toggle');
+        dayToggles.forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const dayCard = this.closest('.day-card');
+                const shiftsContainer = dayCard.querySelector('[id^="shifts-"]');
+                
+                if (this.checked && !shiftsContainer) {
+                    // Add default shift when enabled
+                    const day = this.dataset.day;
+                    addShift(day);
+                } else if (!this.checked && shiftsContainer) {
+                    // Clear shifts when disabled
+                    shiftsContainer.innerHTML = '';
+                }
+            });
+        });
+        
+        // Add shift
+        function addShift(day) {
+            const shiftsContainer = document.getElementById(`shifts-${day}`);
+            if (!shiftsContainer) {
+                alert('Please enable this day first');
+                return;
+            }
+            
+            const shiftHtml = `
+                <div class="time-slot">
+                    <div style="display: flex; gap: 1rem; align-items: center; flex: 1;">
+                        <div>
+                            <label style="font-size: 0.75rem; color: #64748B;">Start Time</label>
+                            <input type="time" value="09:00" class="form-control" style="width: 120px; font-size: 0.875rem;">
+                        </div>
+                        
+                        <div>
+                            <label style="font-size: 0.75rem; color: #64748B;">End Time</label>
+                            <input type="time" value="17:00" class="form-control" style="width: 120px; font-size: 0.875rem;">
+                        </div>
+                        
+                        <div>
+                            <label style="font-size: 0.75rem; color: #64748B;">Max Patients</label>
+                            <input type="number" value="20" class="form-control" style="width: 100px; font-size: 0.875rem;" min="1" max="50">
+                        </div>
+                    </div>
+                    
+                    <button class="btn-secondary" style="padding: 0.5rem; font-size: 0.875rem;" onclick="removeShift(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            shiftsContainer.insertAdjacentHTML('beforeend', shiftHtml);
+        }
+        
+        // Remove shift
+        function removeShift(button) {
+            button.closest('.time-slot').remove();
+        }
+        
+        // Add leave
+        function addLeave() {
+            // This would open a modal or redirect to a form
+            alert('Add leave functionality - would show a date picker modal');
+        }
+        
+        // Save schedule
+        function saveSchedule() {
+            // Collect schedule data
+            const scheduleData = {
+                schedule: []
+            };
+            
+            dayToggles.forEach(toggle => {
+                if (toggle.checked) {
+                    const day = toggle.dataset.day;
+                    const shiftsContainer = document.getElementById(`shifts-${day}`);
+                    const shifts = [];
+                    
+                    if (shiftsContainer) {
+                        const timeSlots = shiftsContainer.querySelectorAll('.time-slot');
+                        timeSlots.forEach(slot => {
+                            const inputs = slot.querySelectorAll('input');
+                            shifts.push({
+                                startTime: inputs[0].value,
+                                endTime: inputs[1].value,
+                                maxPatients: parseInt(inputs[2].value)
+                            });
+                        });
+                    }
+                    
+                    scheduleData.schedule.push({
+                        dayOfWeek: day,
+                        shifts: shifts
+                    });
+                }
+            });
+            
+            // Send to server
+            fetch('/doctor/schedule/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(scheduleData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Schedule saved successfully!');
+            })
+            .catch(error => {
+                alert('Error saving schedule');
+                console.error(error);
+            });
+        }
+    </script>
+</body>
+</html>

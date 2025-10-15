@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Bizil Health Care</title>
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons - Updated to latest version with integrity check -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Fallback to alternative CDN -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" crossorigin="anonymous">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #F8FAFC;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+        
+        .login-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            overflow: hidden;
+            min-height: 600px;
+        }
+        
+        .brand-section {
+            background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .brand-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><circle cx="100" cy="100" r="80" fill="rgba(255,255,255,0.05)"/><circle cx="300" cy="300" r="100" fill="rgba(255,255,255,0.05)"/></svg>');
+            opacity: 0.5;
+        }
+        
+        .brand-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .brand-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .brand-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .brand-description {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            opacity: 0.95;
+        }
+        
+        .brand-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .feature-text {
+            font-size: 0.9375rem;
+            font-weight: 500;
+        }
+        
+        .form-section {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .form-header {
+            margin-bottom: 2rem;
+        }
+        
+        .form-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-subtitle {
+            color: #64748B;
+            font-size: 0.9375rem;
+        }
+        
+        .alert {
+            margin-bottom: 1.5rem;
+            border-radius: 0.75rem;
+            padding: 1rem 1.25rem;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94A3B8;
+            font-size: 1rem;
+            z-index: 2;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 3rem;
+            border: 1px solid #E2E8F0;
+            border-radius: 0.75rem;
+            font-size: 0.9375rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .form-control.is-invalid {
+            border-color: #EF4444;
+        }
+        
+        .form-control.is-valid {
+            border-color: #10B981;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94A3B8;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 2;
+        }
+        
+        .password-toggle:hover {
+            color: #64748B;
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #E2E8F0;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+        
+        .form-check-input:checked {
+            background-color: #8B5CF6;
+            border-color: #8B5CF6;
+        }
+        
+        .form-check-label {
+            font-size: 0.875rem;
+            color: #64748B;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            border: none;
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #E2E8F0;
+        }
+        
+        .divider span {
+            color: #94A3B8;
+            font-size: 0.875rem;
+        }
+        
+        .signup-link {
+            text-align: center;
+            color: #64748B;
+            font-size: 0.9375rem;
+        }
+        
+        .signup-link a {
+            color: #8B5CF6;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .signup-link a:hover {
+            color: #3B82F6;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .back-link a {
+            color: #64748B;
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .back-link a:hover {
+            color: #1E293B;
+        }
+        
+        .invalid-feedback, .valid-feedback {
+            font-size: 0.8125rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .invalid-feedback {
+            color: #EF4444;
+        }
+        
+        .valid-feedback {
+            color: #10B981;
+        }
+        
+        .form-control.is-invalid ~ .invalid-feedback {
+            display: block;
+        }
+        
+        .form-control.is-valid ~ .valid-feedback {
+            display: block;
+        }
+        
+        @media (max-width: 968px) {
+            .login-wrapper {
+                grid-template-columns: 1fr;
+            }
+            
+            .brand-section {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .form-section {
+                padding: 2rem 1.5rem;
+            }
+            
+            .form-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <!-- Brand Section -->
+        <div class="brand-section">
+            <div class="brand-content">
+                <div class="brand-logo">
+                    <div class="brand-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h1 class="brand-title">Bizil Health</h1>
+                </div>
+                
+                <p class="brand-description">
+                    Welcome back! Sign in to access your personal healthcare portal and stay connected with your health journey.
+                </p>
+                
+                <div class="brand-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="feature-text">Secure & HIPAA Compliant</div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="feature-text">24/7 Health Access</div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="feature-text">Expert Medical Support</div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="feature-text">Access Anywhere</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Section -->
+        <div class="form-section">
+            <div class="form-header">
+                <h2 class="form-title">Sign In</h2>
+                <p class="form-subtitle">Welcome back! Please enter your credentials</p>
+            </div>
+            
+            <!-- Flash Messages -->
+            <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span><%= errorMessage %></span>
+                </div>
+            <% } %>
+            
+            <% if (typeof successMessage !== 'undefined' && successMessage) { %>
+                <div class="alert alert-success" role="alert">
+                    <i class="fas fa-check-circle"></i>
+                    <span><%= successMessage %></span>
+                </div>
+            <% } %>
+            
+            <form action="<%= typeof portal !== 'undefined' ? '/' + portal + '/login' : '/login' %>" method="post" class="needs-validation" novalidate id="loginForm">
+                <div class="form-group">
+                    <label for="login" class="form-label">Username or Email</label>
+                    <div class="input-group">
+                        <i class="fas fa-user input-icon"></i>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="login" 
+                            name="login" 
+                            placeholder="Enter your username or email" 
+                            required 
+                            minlength="3" 
+                            maxlength="50"
+                        >
+                        <div class="invalid-feedback">Please enter a valid username or email (minimum 3 characters)</div>
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input 
+                            type="password" 
+                            class="form-control" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Enter your password" 
+                            required 
+                            minlength="6" 
+                            maxlength="100"
+                        >
+                        <i class="fas fa-eye password-toggle" onclick="togglePassword()" aria-label="Toggle password visibility"></i>
+                        <div class="invalid-feedback">Please enter your password (minimum 6 characters)</div>
+                        <div class="valid-feedback">Password looks good!</div>
+                    </div>
+                </div>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                    <label class="form-check-label" for="remember">
+                        Remember me for 30 days
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </button>
+            </form>
+            
+            <% if (typeof portal !== 'undefined' && portal !== 'admin') { %>
+                <div class="divider">
+                    <span>or</span>
+                </div>
+                
+                <div class="signup-link">
+                    Don't have an account? <a href="/<%= portal %>/signup">Create one now</a>
+                </div>
+            <% } %>
+            
+            <div class="back-link">
+                <a href="/">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Password toggle functionality
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.querySelector('.password-toggle');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+        
+        // Form validation
+        (function() {
+            'use strict';
+            const form = document.getElementById('loginForm');
+            
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                
+                // Add validation classes
+                Array.from(form.elements).forEach(function(input) {
+                    if (input.type !== 'submit' && input.type !== 'checkbox') {
+                        if (input.checkValidity()) {
+                            input.classList.remove('is-invalid');
+                            input.classList.add('is-valid');
+                        } else {
+                            input.classList.remove('is-valid');
+                            input.classList.add('is-invalid');
+                        }
+                    }
+                });
+            });
+            
+            // Real-time validation
+            Array.from(form.elements).forEach(function(input) {
+                if (input.type !== 'submit' && input.type !== 'checkbox') {
+                    input.addEventListener('blur', function() {
+                        if (input.value.length > 0) {
+                            if (input.checkValidity()) {
+                                input.classList.remove('is-invalid');
+                                input.classList.add('is-valid');
+                            } else {
+                                input.classList.remove('is-valid');
+                                input.classList.add('is-invalid');
+                            }
+                        }
+                    });
+                    
+                    input.addEventListener('input', function() {
+                        if (input.classList.contains('is-invalid') || input.classList.contains('is-valid')) {
+                            if (input.checkValidity()) {
+                                input.classList.remove('is-invalid');
+                                input.classList.add('is-valid');
+                            } else {
+                                input.classList.remove('is-valid');
+                                input.classList.add('is-invalid');
+                            }
+                        }
+                    });
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -4,291 +4,835 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complete Your Professional Profile - Bizil Health Care</title>
-    <!-- Bootstrap 5 CSS -->
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/modern-dashboard.css">
+    <style>
+        body {
+            background: #F8FAFC;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        html {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .modern-dashboard {
+            min-height: 100vh;
+            width: 100%;
+            height: auto;
+        }
+        
+        .main-content {
+            min-height: 100vh;
+            height: auto;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+            max-width: 100%;
+        }
+        
+        /* Mobile Menu Toggle Button */
+        .mobile-menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            border: 1px solid #E2E8F0;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            z-index: 1002;
+            position: relative;
+        }
+        
+        .mobile-menu-toggle:hover {
+            background: #F8FAFC;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mobile-menu-toggle i {
+            font-size: 1.25rem;
+            color: #1E293B;
+        }
+        
+        /* Mobile Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* Sidebar Mobile States */
+        .sidebar.mobile-hidden {
+            transform: translateX(-100%);
+        }
+        
+        .sidebar.mobile-visible {
+            transform: translateX(0);
+        }
+        
+        /* Profile Form Styles */
+        .profile-form-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #E2E8F0;
+        }
+        
+        .section-title i {
+            color: #8B5CF6;
+            font-size: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #64748B;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #E2E8F0;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: #F8FAFC;
+            border-radius: 0.5rem;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+        }
+        
+        .checkbox-item label {
+            margin: 0;
+            color: #1E293B;
+            font-weight: 500;
+            cursor: pointer;
+            text-transform: none;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-skip {
+            width: 100%;
+            padding: 1rem;
+            background: white;
+            color: #64748B;
+            border: 1px solid #E2E8F0;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+        }
+        
+        .btn-skip:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+        
+        .help-text {
+            font-size: 0.75rem;
+            color: #64748B;
+            margin-top: 0.25rem;
+        }
+        
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        
+        .alert i {
+            font-size: 1.25rem;
+        }
+        
+        .form-control.is-valid {
+            border-color: #10B981;
+        }
+        
+        .form-control.is-invalid {
+            border-color: #EF4444;
+        }
+        
+        .invalid-feedback, .valid-feedback {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .form-control.is-invalid ~ .invalid-feedback {
+            display: block;
+            color: #EF4444;
+        }
+        
+        .form-control.is-valid ~ .valid-feedback {
+            display: block;
+            color: #10B981;
+        }
+        
+        @media (max-width: 1200px) {
+            .modern-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .sidebar-overlay {
+                display: none;
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 280px;
+                height: 100vh;
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar.mobile-visible {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-form-card {
+                padding: 1.5rem;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="signup-container">
-        <div class="signup-content">
-            <div class="brand-section">
-                <div class="brand-logo">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Modern Dashboard Layout -->
+    <div class="modern-dashboard">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
                     <i class="fas fa-heartbeat"></i>
-                    <h1 class="brand-title">Bizil Health Care</h1>
-                    <p class="brand-subtitle">Complete your professional profile to start practicing</p>
                 </div>
-                
-                <div class="brand-features">
-                    <div class="feature-item">
-                        <i class="fas fa-certificate"></i>
-                        <span>Professional Verification</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-calendar-check"></i>
-                        <span>Appointment Management</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-users"></i>
-                        <span>Patient Management</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Practice Analytics</span>
-                    </div>
+                <div>
+                    <h2 class="sidebar-title">Bizil Health</h2>
                 </div>
             </div>
             
-            <div class="form-section">
-                <!-- Flash Messages -->
-                <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
-                    <div class="alert alert-danger flash-message" role="alert">
-                        <i class="fas fa-exclamation-circle me-2"></i>
-                        <%= errorMessage %>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="/doctor/dashboard" class="nav-link">
+                            <i class="fas fa-home nav-icon"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/appointments" class="nav-link">
+                            <i class="fas fa-calendar-alt nav-icon"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/patients" class="nav-link">
+                            <i class="fas fa-users nav-icon"></i>
+                            <span>Patients</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/prescriptions" class="nav-link">
+                            <i class="fas fa-prescription nav-icon"></i>
+                            <span>Prescriptions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/schedule" class="nav-link">
+                            <i class="fas fa-clock nav-icon"></i>
+                            <span>Schedule</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor/complete-profile" class="nav-link active">
+                            <i class="fas fa-user-md nav-icon"></i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" style="margin-top: 2rem;">
+                        <a href="/doctor/logout" class="nav-link" style="color: #EF4444;">
+                            <i class="fas fa-sign-out-alt nav-icon"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="dashboard-header">
+                <div class="welcome-section">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div>
+                            <h1 style="margin-bottom: 0.25rem;"><i class="fas fa-user-md"></i> Complete Your Professional Profile</h1>
+                            <p style="margin: 0;">Provide your professional information for verification and patient services</p>
+                        </div>
                     </div>
-                <% } %>
+                </div>
                 
-                <% if (typeof successMessage !== 'undefined' && successMessage) { %>
-                    <div class="alert alert-success flash-message" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>
-                        <%= successMessage %>
+                <div class="header-actions">
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            D
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">Doctor</div>
+                            <div class="user-role">Medical Professional</div>
+                        </div>
                     </div>
-                <% } %>
-                
-                <h2 class="form-title">Complete Your Professional Profile</h2>
-                <p class="text-muted mb-4">Please provide your professional information for verification and patient services.</p>
-                
-                <form action="/doctor/complete-profile" method="post" class="needs-validation" novalidate id="profileForm">
-                    <!-- Professional Information -->
-                    <h5 class="mb-3"><i class="fas fa-id-card me-2"></i>Professional Information</h5>
+                </div>
+            </header>
+            
+            <!-- Flash Messages -->
+            <% if (typeof successMessage !== 'undefined' && successMessage) { %>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    <span><%= successMessage %></span>
+                </div>
+            <% } %>
+            
+            <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span><%= errorMessage %></span>
+                </div>
+            <% } %>
+            
+            <!-- Profile Form -->
+            <form method="POST" action="/doctor/complete-profile" id="profileForm">
+                <!-- Professional Information Section -->
+                <div class="profile-form-card">
+                    <h2 class="section-title">
+                        <i class="fas fa-id-card"></i>
+                        Professional Information
+                    </h2>
                     
-                    <div class="form-floating has-icon">
-                        <span class="field-icon"><i class="fas fa-certificate"></i></span>
-                        <input type="text" class="form-control" id="licenseNumber" name="licenseNumber" placeholder="Medical License Number" required minlength="5" maxlength="20" pattern="[A-Z0-9\-\/]+">
-                        <label for="licenseNumber">Medical License Number</label>
-                        <div class="invalid-feedback">Please enter a valid medical license number (5-20 characters, letters and numbers only).</div>
+                    <div class="form-group">
+                        <label for="licenseNumber">Medical License Number *</label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="licenseNumber" 
+                               name="licenseNumber" 
+                               value="<%= doctor && doctor.licenseNumber ? doctor.licenseNumber : '' %>"
+                               placeholder="Enter your medical license number"
+                               required 
+                               minlength="5" 
+                               maxlength="20" 
+                               pattern="[A-Z0-9\-\/]+">
+                        <div class="help-text">5-20 characters (uppercase letters, numbers, hyphens, slashes only)</div>
+                        <div class="invalid-feedback">Please enter a valid medical license number</div>
                         <div class="valid-feedback">License number format is correct!</div>
                     </div>
                     
                     <div class="form-row">
-                        <div class="form-floating has-icon">
-                            <span class="field-icon"><i class="fas fa-stethoscope"></i></span>
+                        <div class="form-group">
+                            <label for="specialization">Specialization *</label>
                             <select class="form-control" id="specialization" name="specialization" required>
                                 <option value="">Select Specialization</option>
-                                <option value="General Medicine">General Medicine</option>
-                                <option value="Cardiology">Cardiology</option>
-                                <option value="Neurology">Neurology</option>
-                                <option value="Orthopedics">Orthopedics</option>
-                                <option value="Pediatrics">Pediatrics</option>
-                                <option value="Gynecology">Gynecology</option>
-                                <option value="Dermatology">Dermatology</option>
-                                <option value="Psychiatry">Psychiatry</option>
-                                <option value="Ophthalmology">Ophthalmology</option>
-                                <option value="ENT">ENT</option>
-                                <option value="Radiology">Radiology</option>
-                                <option value="Anesthesiology">Anesthesiology</option>
-                                <option value="Emergency Medicine">Emergency Medicine</option>
-                                <option value="Family Medicine">Family Medicine</option>
-                                <option value="Internal Medicine">Internal Medicine</option>
-                                <option value="Surgery">Surgery</option>
-                                <option value="Oncology">Oncology</option>
-                                <option value="Endocrinology">Endocrinology</option>
-                                <option value="Nephrology">Nephrology</option>
-                                <option value="Pulmonology">Pulmonology</option>
-                                <option value="Gastroenterology">Gastroenterology</option>
-                                <option value="Urology">Urology</option>
-                                <option value="Rheumatology">Rheumatology</option>
+                                <option value="General Medicine" <%= doctor && doctor.specialization === 'General Medicine' ? 'selected' : '' %>>General Medicine</option>
+                                <option value="Cardiology" <%= doctor && doctor.specialization === 'Cardiology' ? 'selected' : '' %>>Cardiology</option>
+                                <option value="Neurology" <%= doctor && doctor.specialization === 'Neurology' ? 'selected' : '' %>>Neurology</option>
+                                <option value="Orthopedics" <%= doctor && doctor.specialization === 'Orthopedics' ? 'selected' : '' %>>Orthopedics</option>
+                                <option value="Pediatrics" <%= doctor && doctor.specialization === 'Pediatrics' ? 'selected' : '' %>>Pediatrics</option>
+                                <option value="Gynecology" <%= doctor && doctor.specialization === 'Gynecology' ? 'selected' : '' %>>Gynecology</option>
+                                <option value="Dermatology" <%= doctor && doctor.specialization === 'Dermatology' ? 'selected' : '' %>>Dermatology</option>
+                                <option value="Psychiatry" <%= doctor && doctor.specialization === 'Psychiatry' ? 'selected' : '' %>>Psychiatry</option>
+                                <option value="Ophthalmology" <%= doctor && doctor.specialization === 'Ophthalmology' ? 'selected' : '' %>>Ophthalmology</option>
+                                <option value="ENT" <%= doctor && doctor.specialization === 'ENT' ? 'selected' : '' %>>ENT</option>
+                                <option value="Radiology" <%= doctor && doctor.specialization === 'Radiology' ? 'selected' : '' %>>Radiology</option>
+                                <option value="Anesthesiology" <%= doctor && doctor.specialization === 'Anesthesiology' ? 'selected' : '' %>>Anesthesiology</option>
+                                <option value="Emergency Medicine" <%= doctor && doctor.specialization === 'Emergency Medicine' ? 'selected' : '' %>>Emergency Medicine</option>
+                                <option value="Family Medicine" <%= doctor && doctor.specialization === 'Family Medicine' ? 'selected' : '' %>>Family Medicine</option>
+                                <option value="Internal Medicine" <%= doctor && doctor.specialization === 'Internal Medicine' ? 'selected' : '' %>>Internal Medicine</option>
+                                <option value="Surgery" <%= doctor && doctor.specialization === 'Surgery' ? 'selected' : '' %>>Surgery</option>
+                                <option value="Oncology" <%= doctor && doctor.specialization === 'Oncology' ? 'selected' : '' %>>Oncology</option>
+                                <option value="Endocrinology" <%= doctor && doctor.specialization === 'Endocrinology' ? 'selected' : '' %>>Endocrinology</option>
+                                <option value="Nephrology" <%= doctor && doctor.specialization === 'Nephrology' ? 'selected' : '' %>>Nephrology</option>
+                                <option value="Pulmonology" <%= doctor && doctor.specialization === 'Pulmonology' ? 'selected' : '' %>>Pulmonology</option>
+                                <option value="Gastroenterology" <%= doctor && doctor.specialization === 'Gastroenterology' ? 'selected' : '' %>>Gastroenterology</option>
+                                <option value="Urology" <%= doctor && doctor.specialization === 'Urology' ? 'selected' : '' %>>Urology</option>
+                                <option value="Rheumatology" <%= doctor && doctor.specialization === 'Rheumatology' ? 'selected' : '' %>>Rheumatology</option>
                             </select>
-                            <label for="specialization">Specialization</label>
-                            <div class="invalid-feedback">Please select your specialization.</div>
+                            <div class="invalid-feedback">Please select your specialization</div>
                             <div class="valid-feedback">Specialization selected!</div>
                         </div>
                         
-                        <div class="form-floating has-icon">
-                            <span class="field-icon"><i class="fas fa-clock"></i></span>
-                            <input type="number" class="form-control" id="experience" name="experience" placeholder="Years of Experience" required min="0" max="60">
-                            <label for="experience">Years of Experience</label>
-                            <div class="invalid-feedback">Please enter valid years of experience (0-60 years).</div>
+                        <div class="form-group">
+                            <label for="experience">Years of Experience *</label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="experience" 
+                                   name="experience" 
+                                   value="<%= doctor && doctor.experience ? doctor.experience : '' %>"
+                                   placeholder="0"
+                                   required 
+                                   min="0" 
+                                   max="60">
+                            <div class="help-text">Enter years of professional medical experience (0-60)</div>
+                            <div class="invalid-feedback">Please enter valid years of experience</div>
                             <div class="valid-feedback">Experience years look good!</div>
                         </div>
                     </div>
                     
-                    <div class="form-floating has-icon">
-                        <span class="field-icon"><i class="fas fa-plus"></i></span>
-                        <input type="text" class="form-control" id="subSpecialization" name="subSpecialization" placeholder="Sub-specialization (optional)">
-                        <label for="subSpecialization">Sub-specialization (optional)</label>
+                    <div class="form-group">
+                        <label for="subSpecialization">Sub-specialization (Optional)</label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="subSpecialization" 
+                               name="subSpecialization" 
+                               value="<%= doctor && doctor.subSpecialization ? doctor.subSpecialization : '' %>"
+                               placeholder="e.g., Interventional Cardiology, Pediatric Neurology">
                     </div>
-                    
-                    <!-- Education -->
-                    <h5 class="mb-3 mt-4"><i class="fas fa-graduation-cap me-2"></i>Education & Qualifications</h5>
+                </div>
+                
+                <!-- Education & Qualifications Section -->
+                <div class="profile-form-card">
+                    <h2 class="section-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        Education & Qualifications
+                    </h2>
                     
                     <div class="form-row">
-                        <div class="form-floating has-icon">
-                            <span class="field-icon"><i class="fas fa-certificate"></i></span>
-                            <input type="text" class="form-control" id="degree" name="qualifications[0][degree]" placeholder="Primary Degree" required minlength="2" maxlength="50" pattern="[A-Za-z\s\.]+">
-                            <label for="degree">Primary Medical Degree</label>
-                            <div class="invalid-feedback">Please enter a valid medical degree (e.g., MBBS, MD, DO).</div>
+                        <div class="form-group">
+                            <label for="degree">Primary Medical Degree *</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="degree" 
+                                   name="qualifications[0][degree]" 
+                                   value="<%= doctor && doctor.qualifications && doctor.qualifications[0] ? doctor.qualifications[0].degree : '' %>"
+                                   placeholder="e.g., MBBS, MD, DO"
+                                   required 
+                                   minlength="2" 
+                                   maxlength="50">
+                            <div class="invalid-feedback">Please enter a valid medical degree</div>
                             <div class="valid-feedback">Degree looks good!</div>
                         </div>
                         
-                        <div class="form-floating has-icon">
-                            <span class="field-icon"><i class="fas fa-university"></i></span>
-                            <input type="text" class="form-control" id="institution" name="qualifications[0][institution]" placeholder="Institution" required minlength="5" maxlength="100">
-                            <label for="institution">Institution</label>
-                            <div class="invalid-feedback">Please enter the full institution name (minimum 5 characters).</div>
+                        <div class="form-group">
+                            <label for="institution">Institution *</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="institution" 
+                                   name="qualifications[0][institution]" 
+                                   value="<%= doctor && doctor.qualifications && doctor.qualifications[0] ? doctor.qualifications[0].institution : '' %>"
+                                   placeholder="Enter institution name"
+                                   required 
+                                   minlength="5" 
+                                   maxlength="100">
+                            <div class="invalid-feedback">Please enter the institution name (minimum 5 characters)</div>
                             <div class="valid-feedback">Institution name is valid!</div>
                         </div>
                     </div>
                     
                     <div class="form-row">
-                        <div class="form-floating has-icon">
-                            <span class="field-icon"><i class="fas fa-calendar"></i></span>
-                            <input type="number" class="form-control" id="year" name="qualifications[0][year]" placeholder="Graduation Year" required min="1950" max="2025">
-                            <label for="year">Graduation Year</label>
-                            <div class="invalid-feedback">Please enter a valid graduation year (1950-2025).</div>
+                        <div class="form-group">
+                            <label for="year">Graduation Year *</label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="year" 
+                                   name="qualifications[0][year]" 
+                                   value="<%= doctor && doctor.qualifications && doctor.qualifications[0] ? doctor.qualifications[0].year : '' %>"
+                                   placeholder="YYYY"
+                                   required 
+                                   min="1950" 
+                                   max="2025">
+                            <div class="invalid-feedback">Please enter a valid graduation year (1950-2025)</div>
                             <div class="valid-feedback">Graduation year is valid!</div>
                         </div>
                         
-                        <div class="form-floating has-icon">
-                            <span class="field-icon"><i class="fas fa-globe"></i></span>
-                            <input type="text" class="form-control" id="country" name="qualifications[0][country]" value="India">
+                        <div class="form-group">
                             <label for="country">Country</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="country" 
+                                   name="qualifications[0][country]" 
+                                   value="<%= doctor && doctor.qualifications && doctor.qualifications[0] && doctor.qualifications[0].country ? doctor.qualifications[0].country : 'India' %>">
                         </div>
                     </div>
+                </div>
+                
+                <!-- Current Practice Section -->
+                <div class="profile-form-card">
+                    <h2 class="section-title">
+                        <i class="fas fa-hospital"></i>
+                        Current Practice
+                    </h2>
                     
-                    <!-- Current Hospital/Practice -->
-                    <h5 class="mb-3 mt-4"><i class="fas fa-hospital me-2"></i>Current Practice</h5>
-                    
-                    <div class="form-floating has-icon">
-                        <span class="field-icon"><i class="fas fa-building"></i></span>
-                        <input type="text" class="form-control" id="hospitalName" name="currentHospital[name]" placeholder="Hospital/Clinic Name" required minlength="3" maxlength="100">
-                        <label for="hospitalName">Hospital/Clinic Name</label>
-                        <div class="invalid-feedback">Please enter your current workplace name (minimum 3 characters).</div>
+                    <div class="form-group">
+                        <label for="hospitalName">Hospital/Clinic Name *</label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="hospitalName" 
+                               name="currentHospital[name]" 
+                               value="<%= doctor && doctor.currentHospital ? doctor.currentHospital.name : '' %>"
+                               placeholder="Enter hospital or clinic name"
+                               required 
+                               minlength="3" 
+                               maxlength="100">
+                        <div class="invalid-feedback">Please enter your workplace name (minimum 3 characters)</div>
                         <div class="valid-feedback">Hospital/clinic name looks good!</div>
                     </div>
                     
                     <div class="form-row">
-                        <div class="form-floating has-icon">
-                            <span class="field-icon"><i class="fas fa-sitemap"></i></span>
-                            <input type="text" class="form-control" id="department" name="currentHospital[department]" placeholder="Department">
+                        <div class="form-group">
                             <label for="department">Department</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="department" 
+                                   name="currentHospital[department]" 
+                                   value="<%= doctor && doctor.currentHospital ? doctor.currentHospital.department : '' %>"
+                                   placeholder="e.g., Cardiology Department">
                         </div>
                         
-                        <div class="form-floating has-icon">
-                            <span class="field-icon"><i class="fas fa-user-tie"></i></span>
-                            <input type="text" class="form-control" id="position" name="currentHospital[position]" placeholder="Position">
+                        <div class="form-group">
                             <label for="position">Position</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="position" 
+                                   name="currentHospital[position]" 
+                                   value="<%= doctor && doctor.currentHospital ? doctor.currentHospital.position : '' %>"
+                                   placeholder="e.g., Senior Consultant, Resident">
                         </div>
                     </div>
-                    
-                    <!-- Consultation Fees -->
-                    <h5 class="mb-3 mt-4"><i class="fas fa-rupee-sign me-2"></i>Consultation Fees</h5>
+                </div>
+                
+                <!-- Consultation Fees Section -->
+                <div class="profile-form-card">
+                    <h2 class="section-title">
+                        <i class="fas fa-rupee-sign"></i>
+                        Consultation Fees
+                    </h2>
                     
                     <div class="form-row">
-                        <div class="form-floating has-icon">
-                            <span class="field-icon"><i class="fas fa-clinic-medical"></i></span>
-                            <input type="number" class="form-control" id="inPersonFee" name="consultationFee[inPerson]" placeholder="In-Person Fee" required min="100" max="10000" step="50">
-                            <label for="inPersonFee">In-Person Consultation (₹)</label>
-                            <div class="invalid-feedback">Please enter a valid consultation fee (₹100 - ₹10,000).</div>
+                        <div class="form-group">
+                            <label for="inPersonFee">In-Person Consultation (₹) *</label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="inPersonFee" 
+                                   name="consultationFee[inPerson]" 
+                                   value="<%= doctor && doctor.consultationFee ? doctor.consultationFee.inPerson : '' %>"
+                                   placeholder="500"
+                                   required 
+                                   min="100" 
+                                   max="10000" 
+                                   step="50">
+                            <div class="help-text">Fee range: ₹100 - ₹10,000</div>
+                            <div class="invalid-feedback">Please enter a valid consultation fee</div>
                             <div class="valid-feedback">Fee amount is valid!</div>
                         </div>
                         
-                        <div class="form-floating has-icon">
-                            <span class="field-icon"><i class="fas fa-video"></i></span>
-                            <input type="number" class="form-control" id="onlineFee" name="consultationFee[online]" placeholder="Online Fee" min="50" max="5000" step="25">
+                        <div class="form-group">
                             <label for="onlineFee">Online Consultation (₹)</label>
-                            <div class="invalid-feedback">Please enter a valid online fee (₹50 - ₹5,000).</div>
-                            <div class="valid-feedback">Online fee looks good!</div>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="onlineFee" 
+                                   name="consultationFee[online]" 
+                                   value="<%= doctor && doctor.consultationFee ? doctor.consultationFee.online : '' %>"
+                                   placeholder="300"
+                                   min="50" 
+                                   max="5000" 
+                                   step="25">
+                            <div class="help-text">Fee range: ₹50 - ₹5,000</div>
                         </div>
                     </div>
                     
-                    <div class="form-floating has-icon">
-                        <span class="field-icon"><i class="fas fa-redo"></i></span>
-                        <input type="number" class="form-control" id="followUpFee" name="consultationFee[followUp]" placeholder="Follow-up Fee" min="0">
+                    <div class="form-group">
                         <label for="followUpFee">Follow-up Consultation (₹)</label>
+                        <input type="number" 
+                               class="form-control" 
+                               id="followUpFee" 
+                               name="consultationFee[followUp]" 
+                               value="<%= doctor && doctor.consultationFee ? doctor.consultationFee.followUp : '' %>"
+                               placeholder="200"
+                               min="0">
+                        <div class="help-text">Optional: Follow-up consultation fee</div>
                     </div>
+                </div>
+                
+                <!-- Languages Section -->
+                <div class="profile-form-card">
+                    <h2 class="section-title">
+                        <i class="fas fa-language"></i>
+                        Languages Spoken
+                    </h2>
                     
-                    <!-- Languages -->
-                    <h5 class="mb-3 mt-4"><i class="fas fa-language me-2"></i>Languages Spoken</h5>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="lang-english" name="languages" value="English" checked>
-                                <label class="form-check-label" for="lang-english">English</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="lang-hindi" name="languages" value="Hindi">
-                                <label class="form-check-label" for="lang-hindi">Hindi</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="lang-telugu" name="languages" value="Telugu">
-                                <label class="form-check-label" for="lang-telugu">Telugu</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="lang-tamil" name="languages" value="Tamil">
-                                <label class="form-check-label" for="lang-tamil">Tamil</label>
-                            </div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input class="form-check-input" type="checkbox" id="lang-english" name="languages" value="English" checked>
+                            <label for="lang-english">English</label>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="lang-bengali" name="languages" value="Bengali">
-                                <label class="form-check-label" for="lang-bengali">Bengali</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="lang-marathi" name="languages" value="Marathi">
-                                <label class="form-check-label" for="lang-marathi">Marathi</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="lang-gujarati" name="languages" value="Gujarati">
-                                <label class="form-check-label" for="lang-gujarati">Gujarati</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="lang-other" name="languages" value="Other">
-                                <label class="form-check-label" for="lang-other">Other</label>
-                            </div>
+                        <div class="checkbox-item">
+                            <input class="form-check-input" type="checkbox" id="lang-hindi" name="languages" value="Hindi">
+                            <label for="lang-hindi">Hindi</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input class="form-check-input" type="checkbox" id="lang-telugu" name="languages" value="Telugu">
+                            <label for="lang-telugu">Telugu</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input class="form-check-input" type="checkbox" id="lang-tamil" name="languages" value="Tamil">
+                            <label for="lang-tamil">Tamil</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input class="form-check-input" type="checkbox" id="lang-bengali" name="languages" value="Bengali">
+                            <label for="lang-bengali">Bengali</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input class="form-check-input" type="checkbox" id="lang-marathi" name="languages" value="Marathi">
+                            <label for="lang-marathi">Marathi</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input class="form-check-input" type="checkbox" id="lang-gujarati" name="languages" value="Gujarati">
+                            <label for="lang-gujarati">Gujarati</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input class="form-check-input" type="checkbox" id="lang-other" name="languages" value="Other">
+                            <label for="lang-other">Other</label>
                         </div>
                     </div>
-                    
-                    <button type="submit" class="btn btn-primary btn-signup mt-4">
-                        <i class="fas fa-check me-2"></i>Complete Profile & Submit for Verification
-                    </button>
-                    
-                    <button type="button" class="btn btn-outline-secondary w-100 mt-2" onclick="skipProfile()">
-                        Skip for Now
-                    </button>
-                </form>
-            </div>
-        </div>
+                </div>
+                
+                <!-- Submit Buttons -->
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-check"></i> Complete Profile & Submit for Verification
+                </button>
+                
+                <button type="button" class="btn-skip" onclick="skipProfile()">
+                    Skip for Now
+                </button>
+            </form>
+        </main>
     </div>
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Mobile Menu Toggle Functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        function toggleMenu() {
+            sidebar.classList.toggle('mobile-visible');
+            sidebarOverlay.classList.toggle('active');
+            
+            const icon = mobileMenuToggle.querySelector('i');
+            if (sidebar.classList.contains('mobile-visible')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+        
+        function closeMenu() {
+            sidebar.classList.remove('mobile-visible');
+            sidebarOverlay.classList.remove('active');
+            const icon = mobileMenuToggle.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', toggleMenu);
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', closeMenu);
+        }
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 1200) {
+                    closeMenu();
+                }
+            });
+        });
+        
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1200) {
+                closeMenu();
+            }
+        });
+    
         function skipProfile() {
             if (confirm('Are you sure you want to skip completing your professional profile? Your account will need verification before you can see patients.')) {
-                window.location.href = '/dashboard';
+                window.location.href = '/doctor/dashboard';
             }
         }
         
         // Form validation
         document.getElementById('profileForm').addEventListener('submit', function(event) {
-            if (!this.checkValidity()) {
+            if (!this.checkValidity() || !validateLanguages()) {
                 event.preventDefault();
                 event.stopPropagation();
-                // Focus on first invalid field
+                
+                if (!validateLanguages()) {
+                    alert('Please select at least one language you speak.');
+                    return;
+                }
+                
                 const firstInvalid = this.querySelector('.form-control:invalid');
                 if (firstInvalid) {
                     firstInvalid.focus();
                     firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             }
-            this.classList.add('was-validated');
         });
 
         // Real-time validation
@@ -333,36 +877,11 @@
                     }
                     break;
                     
-                case 'degree':
-                    const degreeRegex = /^[A-Za-z\s\.]{2,50}$/;
-                    if (!degreeRegex.test(field.value.trim())) {
-                        field.setCustomValidity('Degree must contain only letters, spaces, and dots (2-50 characters)');
-                    } else {
-                        field.setCustomValidity('');
-                    }
-                    break;
-                    
-                case 'institution':
-                    if (field.value.trim().length < 5 || field.value.trim().length > 100) {
-                        field.setCustomValidity('Institution name must be between 5 and 100 characters');
-                    } else {
-                        field.setCustomValidity('');
-                    }
-                    break;
-                    
                 case 'year':
                     const currentYear = new Date().getFullYear();
                     const graduationYear = parseInt(field.value);
                     if (isNaN(graduationYear) || graduationYear < 1950 || graduationYear > currentYear + 1) {
                         field.setCustomValidity(`Graduation year must be between 1950 and ${currentYear + 1}`);
-                    } else {
-                        field.setCustomValidity('');
-                    }
-                    break;
-                    
-                case 'hospitalName':
-                    if (field.value.trim().length < 3 || field.value.trim().length > 100) {
-                        field.setCustomValidity('Hospital/clinic name must be between 3 and 100 characters');
                     } else {
                         field.setCustomValidity('');
                     }
@@ -382,19 +901,6 @@
                         const onlineFee = parseInt(field.value);
                         if (isNaN(onlineFee) || onlineFee < 50 || onlineFee > 5000) {
                             field.setCustomValidity('Online consultation fee must be between ₹50 and ₹5,000');
-                        } else {
-                            field.setCustomValidity('');
-                        }
-                    } else {
-                        field.setCustomValidity('');
-                    }
-                    break;
-                    
-                case 'followUpFee':
-                    if (field.value && field.value.trim() !== '') {
-                        const followUpFee = parseInt(field.value);
-                        if (isNaN(followUpFee) || followUpFee < 25 || followUpFee > 2500) {
-                            field.setCustomValidity('Follow-up consultation fee must be between ₹25 and ₹2,500');
                         } else {
                             field.setCustomValidity('');
                         }
@@ -422,39 +928,10 @@
         // Ensure at least one language is selected
         function validateLanguages() {
             const languageCheckboxes = document.querySelectorAll('input[name="languages"]:checked');
-            const languageSection = document.querySelector('input[name="languages"]').closest('.row');
-            
-            if (languageCheckboxes.length === 0) {
-                languageSection.classList.add('is-invalid');
-                return false;
-            } else {
-                languageSection.classList.remove('is-invalid');
-                return true;
-            }
+            return languageCheckboxes.length > 0;
         }
-
-        // Add language validation to form submit
-        document.getElementById('profileForm').addEventListener('submit', function(event) {
-            if (!validateLanguages()) {
-                event.preventDefault();
-                event.stopPropagation();
-                alert('Please select at least one language you speak.');
-            }
-        });
         
-        // Auto-dismiss flash messages
-        document.addEventListener('DOMContentLoaded', function() {
-            const flashMessages = document.querySelectorAll('.flash-message');
-            flashMessages.forEach(function(message) {
-                setTimeout(function() {
-                    message.style.transition = 'opacity 0.5s ease-out';
-                    message.style.opacity = '0';
-                    setTimeout(function() {
-                        message.remove();
-                    }, 500);
-                }, 5000);
-            });
-        });
+        console.log('Doctor profile page loaded successfully');
     </script>
 </body>
 </html>
