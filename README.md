@@ -1,20 +1,52 @@
-# 🏥 Bizil Healthcare Management System# 🏥 Bizil Healthcare Management System# 🏥 Bizil Healthcare Management System# Bizil Health Care
-
-
+# 🏥 Bizil Healthcare Management System
 
 A comprehensive, full-stack healthcare management platform built with modern web technologies. This application provides complete healthcare management solutions for patients, doctors, and administrators with advanced features and secure data handling.
 
-
-
-**Created by Team Innovators**A comprehensive, full-stack healthcare management platform built with modern web technologies. This application provides complete healthcare management solutions for patients, doctors, and administrators with advanced features and secure data handling.
-
-
+**Created by Team Innovators**
 
 ---
 
+## 🔑 Quick Login Credentials (For Testing)
+
+### 👨‍⚕️ Doctor Login
+```
+URL: http://localhost:8080/doctor/login
+
+Username: dr.rajesh
+Email: dr.rajesh@healthcare.com
+Password: password123
+
+Specialization: Cardiology
+```
+
+### 👥 Patient Login
+```
+URL: http://localhost:8080/patient/login
+
+Username: amit.singh
+Email: amit.singh@email.com
+Password: password123
+
+Profile: 45 years old male with Type 2 Diabetes
+```
+
+### 🛡️ Admin Login
+```
+URL: http://localhost:8080/admin/login
+
+Email: admin@healthcare.com
+Password: (check .env file for ADMIN_PASSWORD)
+```
+
+> **Note**: All sample users have the password `password123` except admin. The database includes 5 doctors, 8 patients, 15 appointments, 8 test results, and 5 prescriptions for comprehensive testing.
+
+---A comprehensive, full-stack healthcare management platform built with modern web technologies. This application provides complete healthcare management solutions for patients, doctors, and administrators with advanced features and secure data handling.
 
 
-## 🌟 Overview**Created by Team Innovators**A comprehensive, full-stack healthcare management platform built with modern web technologies. This application provides complete healthcare management solutions for patients, doctors, and administrators with advanced features and secure data handling.A comprehensive healthcare management system built with Node.js, Express, MongoDB, and EJS. This application provides separate portals for patients, doctors, and administrators with role-based access control and verification systems.
+
+
+## 🌟 Overview
+**Created by Team Innovators**A comprehensive, full-stack healthcare management platform built with modern web technologies. This application provides complete healthcare management solutions for patients, doctors, and administrators with advanced features and secure data handling.A comprehensive healthcare management system built with Node.js, Express, MongoDB, and EJS. This application provides separate portals for patients, doctors, and administrators with role-based access control and verification systems.
 
 
 
@@ -22,15 +54,12 @@ Bizil Healthcare is a complete healthcare ecosystem that digitizes and streamlin
 
 
 
-------
-
-
-
 ## ✨ Key Features
 
 
 
-### 🔐 Multi-Portal Architecture## 🌟 Overview**Created by Team Innovators****Created by Team Innovators**
+### 🔐 Multi-Portal Architecture
+## 🌟 Overview**Created by Team Innovators****Created by Team Innovators**
 
 
 
@@ -46,9 +75,7 @@ Bizil Healthcare is a complete healthcare ecosystem that digitizes and streamlin
 
 
 
-#### For Patients 👥------## Features
-
-
+#### For Patients 👥-
 
 - **Profile Management**
 
