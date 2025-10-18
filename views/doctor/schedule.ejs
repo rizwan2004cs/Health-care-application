@@ -601,25 +601,66 @@
         dayToggles.forEach(toggle => {
             toggle.addEventListener('change', function() {
                 const dayCard = this.closest('.day-card');
-                const shiftsContainer = dayCard.querySelector('[id^="shifts-"]');
+                const day = this.dataset.day;
+                let shiftsContainer = dayCard.querySelector(`#shifts-${day}`);
+                const buttonContainer = dayCard.querySelector('[style*="justify-content: space-between"]');
                 
                 if (this.checked && !shiftsContainer) {
-                    // Add default shift when enabled
-                    const day = this.dataset.day;
+                    // Create shifts container if it doesn't exist
+                    shiftsContainer = document.createElement('div');
+                    shiftsContainer.id = `shifts-${day}`;
+                    dayCard.appendChild(shiftsContainer);
+                    
+                    // Add "Add Shift" button if it doesn't exist
+                    let addShiftBtn = buttonContainer.querySelector('.btn-secondary');
+                    if (!addShiftBtn) {
+                        addShiftBtn = document.createElement('button');
+                        addShiftBtn.className = 'btn-secondary';
+                        addShiftBtn.style.cssText = 'padding: 0.5rem 1rem; font-size: 0.875rem;';
+                        addShiftBtn.innerHTML = '<i class="fas fa-plus"></i> Add Shift';
+                        addShiftBtn.onclick = () => addShift(day);
+                        buttonContainer.appendChild(addShiftBtn);
+                    }
+                    
+                    // Add default shift
                     addShift(day);
-                } else if (!this.checked && shiftsContainer) {
-                    // Clear shifts when disabled
-                    shiftsContainer.innerHTML = '';
+                    
+                    // Update the status text
+                    const statusText = buttonContainer.querySelector('[style*="font-size: 0.875rem"]');
+                    if (statusText) {
+                        statusText.textContent = '1 shift(s)';
+                    }
+                } else if (!this.checked) {
+                    // Remove shifts container when disabled
+                    if (shiftsContainer) {
+                        shiftsContainer.remove();
+                    }
+                    
+                    // Remove "Add Shift" button
+                    const addShiftBtn = buttonContainer.querySelector('.btn-secondary');
+                    if (addShiftBtn) {
+                        addShiftBtn.remove();
+                    }
+                    
+                    // Update the status text
+                    const statusText = buttonContainer.querySelector('[style*="font-size: 0.875rem"]');
+                    if (statusText) {
+                        statusText.textContent = 'Not available';
+                    }
                 }
             });
         });
         
         // Add shift
         function addShift(day) {
-            const shiftsContainer = document.getElementById(`shifts-${day}`);
+            let shiftsContainer = document.getElementById(`shifts-${day}`);
+            
+            // If container doesn't exist, create it (shouldn't happen but just in case)
             if (!shiftsContainer) {
-                alert('Please enable this day first');
-                return;
+                const dayCard = document.querySelector(`[data-day="${day}"]`).closest('.day-card');
+                shiftsContainer = document.createElement('div');
+                shiftsContainer.id = `shifts-${day}`;
+                dayCard.appendChild(shiftsContainer);
             }
             
             const shiftHtml = `
@@ -648,11 +689,28 @@
             `;
             
             shiftsContainer.insertAdjacentHTML('beforeend', shiftHtml);
+            
+            // Update shift count
+            const dayCard = shiftsContainer.closest('.day-card');
+            const statusText = dayCard.querySelector('[style*="font-size: 0.875rem"]');
+            if (statusText) {
+                const shiftCount = shiftsContainer.querySelectorAll('.time-slot').length;
+                statusText.textContent = `${shiftCount} shift(s)`;
+            }
         }
         
         // Remove shift
         function removeShift(button) {
+            const shiftsContainer = button.closest('[id^="shifts-"]');
             button.closest('.time-slot').remove();
+            
+            // Update shift count
+            const dayCard = shiftsContainer.closest('.day-card');
+            const statusText = dayCard.querySelector('[style*="font-size: 0.875rem"]');
+            if (statusText) {
+                const shiftCount = shiftsContainer.querySelectorAll('.time-slot').length;
+                statusText.textContent = shiftCount > 0 ? `${shiftCount} shift(s)` : 'Not available';
+            }
         }
         
         // Add leave
