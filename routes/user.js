@@ -1508,6 +1508,109 @@ router.post("/doctor/schedule/update", asyncWrap(async (req, res) => {
     }
 }));
 
+// Add Unavailable Date
+router.post("/doctor/schedule/add-unavailable", asyncWrap(async (req, res) => {
+    try {
+        if (!req.user || req.user.portal !== 'doctor') {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+        
+        const profile = await Doctor.findOne({ user: req.user._id });
+        
+        if (!profile) {
+            return res.status(404).json({ success: false, message: 'Doctor profile not found' });
+        }
+        
+        const { date, reason } = req.body;
+        
+        if (!date) {
+            return res.status(400).json({ success: false, message: 'Date is required' });
+        }
+        
+        // Initialize availability if not exists
+        if (!profile.availability) {
+            profile.availability = {
+                schedule: [],
+                unavailableDates: [],
+                leaveRequests: []
+            };
+        }
+        
+        if (!profile.availability.unavailableDates) {
+            profile.availability.unavailableDates = [];
+        }
+        
+        // Check if date already exists
+        const existingDate = profile.availability.unavailableDates.find(
+            item => new Date(item.date).toDateString() === new Date(date).toDateString()
+        );
+        
+        if (existingDate) {
+            return res.status(400).json({ success: false, message: 'This date is already marked as unavailable' });
+        }
+        
+        // Add unavailable date
+        profile.availability.unavailableDates.push({
+            date: new Date(date),
+            reason: reason || 'Not available'
+        });
+        
+        await profile.save();
+        
+        return res.json({ 
+            success: true, 
+            message: 'Date marked as unavailable successfully' 
+        });
+        
+    } catch (error) {
+        console.error('Error adding unavailable date:', error);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Failed to mark date as unavailable. Please try again.' 
+        });
+    }
+}));
+
+// Remove Unavailable Date
+router.post("/doctor/schedule/remove-unavailable/:dateId", asyncWrap(async (req, res) => {
+    try {
+        if (!req.user || req.user.portal !== 'doctor') {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+        
+        const profile = await Doctor.findOne({ user: req.user._id });
+        
+        if (!profile) {
+            return res.status(404).json({ success: false, message: 'Doctor profile not found' });
+        }
+        
+        const { dateId } = req.params;
+        
+        if (!profile.availability || !profile.availability.unavailableDates) {
+            return res.status(404).json({ success: false, message: 'No unavailable dates found' });
+        }
+        
+        // Remove the unavailable date
+        profile.availability.unavailableDates = profile.availability.unavailableDates.filter(
+            item => item._id.toString() !== dateId
+        );
+        
+        await profile.save();
+        
+        return res.json({ 
+            success: true, 
+            message: 'Unavailable date removed successfully' 
+        });
+        
+    } catch (error) {
+        console.error('Error removing unavailable date:', error);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Failed to remove unavailable date. Please try again.' 
+        });
+    }
+}));
+
 // Doctor Profile View Page
 router.get("/doctor/profile", asyncWrap(async (req, res) => {
     if (!req.user || req.user.portal !== 'doctor') {

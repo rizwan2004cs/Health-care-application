@@ -169,6 +169,67 @@
         input:checked + .slider:before {
             transform: translateX(24px);
         }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1E293B;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #64748B;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .close-modal:hover {
+            background: #F8FAFC;
+            color: #1E293B;
+        }
     </style>
 </head>
 <body>
@@ -456,7 +517,7 @@
                                 </div>
                             </div>
                             
-                            <button class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                            <button class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="removeUnavailableDate('<%= leave._id %>')">
                                 <i class="fas fa-trash"></i> Remove
                             </button>
                         </div>
@@ -469,6 +530,49 @@
                 <% } %>
             </div>
         </main>
+    </div>
+    
+    <!-- Leave Modal -->
+    <div class="modal-overlay" id="leaveModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-calendar-times" style="color: #EF4444;"></i>
+                    Mark Unavailable Date
+                </h3>
+                <button class="close-modal" onclick="closeLeaveModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="leaveForm" onsubmit="submitLeave(event)">
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="font-size: 0.875rem; font-weight: 600; color: #1E293B; margin-bottom: 0.5rem; display: block;">
+                        Select Date
+                    </label>
+                    <input type="date" id="leaveDate" class="form-control" required 
+                           min="<%= new Date().toISOString().split('T')[0] %>"
+                           style="width: 100%; padding: 0.75rem; border: 1px solid #E2E8F0; border-radius: 0.5rem; font-size: 0.875rem;">
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="font-size: 0.875rem; font-weight: 600; color: #1E293B; margin-bottom: 0.5rem; display: block;">
+                        Reason (Optional)
+                    </label>
+                    <textarea id="leaveReason" class="form-control" rows="3" placeholder="Enter reason for unavailability..."
+                              style="width: 100%; padding: 0.75rem; border: 1px solid #E2E8F0; border-radius: 0.5rem; font-size: 0.875rem; resize: vertical;"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+                    <button type="button" class="btn-secondary" onclick="closeLeaveModal()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-check"></i> Mark Unavailable
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -553,8 +657,88 @@
         
         // Add leave
         function addLeave() {
-            // This would open a modal or redirect to a form
-            alert('Add leave functionality - would show a date picker modal');
+            const modal = document.getElementById('leaveModal');
+            modal.classList.add('active');
+        }
+        
+        // Close leave modal
+        function closeLeaveModal() {
+            const modal = document.getElementById('leaveModal');
+            modal.classList.remove('active');
+            document.getElementById('leaveForm').reset();
+        }
+        
+        // Submit leave
+        function submitLeave(event) {
+            event.preventDefault();
+            
+            const date = document.getElementById('leaveDate').value;
+            const reason = document.getElementById('leaveReason').value;
+            
+            if (!date) {
+                alert('Please select a date');
+                return;
+            }
+            
+            // Send to server
+            fetch('/doctor/schedule/add-unavailable', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    date: date,
+                    reason: reason || 'Personal leave'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Date marked as unavailable successfully!');
+                    closeLeaveModal();
+                    location.reload();
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to mark date as unavailable'));
+                }
+            })
+            .catch(error => {
+                alert('Error marking date as unavailable');
+                console.error(error);
+            });
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('leaveModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLeaveModal();
+            }
+        });
+        
+        // Remove unavailable date
+        function removeUnavailableDate(dateId) {
+            if (!confirm('Are you sure you want to remove this unavailable date?')) {
+                return;
+            }
+            
+            fetch(`/doctor/schedule/remove-unavailable/${dateId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Unavailable date removed successfully!');
+                    location.reload();
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to remove unavailable date'));
+                }
+            })
+            .catch(error => {
+                alert('Error removing unavailable date');
+                console.error(error);
+            });
         }
         
         // Save schedule
