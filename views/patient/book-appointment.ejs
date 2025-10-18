@@ -645,6 +645,35 @@
         if (dateInput) {
             const today = new Date().toISOString().split('T')[0];
             dateInput.setAttribute('min', today);
+            
+            // Disable unavailable dates
+            <% if (selectedDoctor && selectedDoctor.availability && selectedDoctor.availability.unavailableDates && selectedDoctor.availability.unavailableDates.length > 0) { %>
+                const unavailableDates = [
+                    <% selectedDoctor.availability.unavailableDates.forEach(function(item, index) { %>
+                        '<%= new Date(item.date).toISOString().split('T')[0] %>'<%= index < selectedDoctor.availability.unavailableDates.length - 1 ? ',' : '' %>
+                    <% }); %>
+                ];
+                
+                dateInput.addEventListener('input', function() {
+                    const selectedDate = this.value;
+                    if (unavailableDates.includes(selectedDate)) {
+                        alert('The doctor is not available on this date. Please choose a different date.');
+                        this.value = '';
+                    }
+                });
+                
+                // Visual feedback - change date input color for unavailable dates
+                dateInput.addEventListener('change', function() {
+                    const selectedDate = this.value;
+                    if (unavailableDates.includes(selectedDate)) {
+                        this.style.borderColor = '#EF4444';
+                        this.style.backgroundColor = '#FEE2E2';
+                    } else {
+                        this.style.borderColor = '';
+                        this.style.backgroundColor = '';
+                    }
+                });
+            <% } %>
         }
         
         console.log('Book Appointment page loaded successfully');

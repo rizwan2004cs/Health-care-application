@@ -514,19 +514,57 @@
         const dateInput = document.getElementById('appointmentDate');
         if (dateInput) {
             dateInput.min = new Date().toISOString().split('T')[0];
-        }
-        
-        // Disable weekends (optional)
-        if (dateInput) {
-            dateInput.addEventListener('input', function() {
-                const selectedDate = new Date(this.value);
-                const dayOfWeek = selectedDate.getDay();
+            
+            // Disable unavailable dates
+            <% if (doctor && doctor.availability && doctor.availability.unavailableDates && doctor.availability.unavailableDates.length > 0) { %>
+                const unavailableDates = [
+                    <% doctor.availability.unavailableDates.forEach(function(item, index) { %>
+                        '<%= new Date(item.date).toISOString().split('T')[0] %>'<%= index < doctor.availability.unavailableDates.length - 1 ? ',' : '' %>
+                    <% }); %>
+                ];
                 
-                if (dayOfWeek === 0 || dayOfWeek === 6) { // Sunday = 0, Saturday = 6
-                    alert('Please select a weekday (Monday-Friday)');
-                    this.value = '';
-                }
-            });
+                dateInput.addEventListener('input', function() {
+                    const selectedDate = this.value;
+                    const date = new Date(selectedDate);
+                    const dayOfWeek = date.getDay();
+                    
+                    // Check if date is unavailable
+                    if (unavailableDates.includes(selectedDate)) {
+                        alert('The doctor is not available on this date. Please choose a different date.');
+                        this.value = '';
+                        return;
+                    }
+                    
+                    // Check weekends
+                    if (dayOfWeek === 0 || dayOfWeek === 6) {
+                        alert('Please select a weekday (Monday-Friday)');
+                        this.value = '';
+                    }
+                });
+                
+                // Visual feedback for unavailable dates
+                dateInput.addEventListener('change', function() {
+                    const selectedDate = this.value;
+                    if (unavailableDates.includes(selectedDate)) {
+                        this.style.borderColor = '#EF4444';
+                        this.style.backgroundColor = '#FEE2E2';
+                    } else {
+                        this.style.borderColor = '';
+                        this.style.backgroundColor = '';
+                    }
+                });
+            <% } else { %>
+                // Disable weekends (optional)
+                dateInput.addEventListener('input', function() {
+                    const selectedDate = new Date(this.value);
+                    const dayOfWeek = selectedDate.getDay();
+                    
+                    if (dayOfWeek === 0 || dayOfWeek === 6) {
+                        alert('Please select a weekday (Monday-Friday)');
+                        this.value = '';
+                    }
+                });
+            <% } %>
         }
     </script>
 </body>

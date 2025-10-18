@@ -2654,6 +2654,23 @@ router.post("/patient/book-appointment", requirePatientAuth, attachPatientProfil
         return res.redirect('/patient/search-doctors');
     }
     
+    // Check if the selected date is marked as unavailable by the doctor
+    const appointmentDateObj = new Date(appointmentDate);
+    appointmentDateObj.setHours(0, 0, 0, 0); // Reset time for date comparison
+    
+    if (doctor.availability && doctor.availability.unavailableDates) {
+        const isUnavailable = doctor.availability.unavailableDates.some(unavailableDate => {
+            const unavailableDateObj = new Date(unavailableDate.date);
+            unavailableDateObj.setHours(0, 0, 0, 0);
+            return unavailableDateObj.getTime() === appointmentDateObj.getTime();
+        });
+        
+        if (isUnavailable) {
+            req.flash('error', 'The doctor is not available on the selected date. Please choose a different date.');
+            return res.redirect(`/patient/book-appointment/${doctorId}`);
+        }
+    }
+    
     // Check for appointment conflicts
     const conflictingAppointment = await Appointment.findOne({
         doctor: doctorId,
@@ -3242,9 +3259,14 @@ router.get("/patient/appointments/:appointmentId/reschedule", requirePatientAuth
         return res.redirect('/patient/appointments');
     }
     
+    // Get full doctor details with availability for date validation
+    const doctor = await Doctor.findById(appointment.doctor._id)
+        .select('firstName lastName specialization availability');
+    
     res.render('patient/reschedule-appointment', {
         title: 'Reschedule Appointment',
         appointment,
+        doctor,
         errorMessage: req.flash('error')[0] || null,
         successMessage: req.flash('success')[0] || null
     });
@@ -3288,6 +3310,26 @@ router.post("/patient/appointments/:appointmentId/reschedule", requirePatientAut
     if (newAppointmentDate < today) {
         req.flash('error', 'Cannot schedule appointment for past dates');
         return res.redirect(`/patient/appointments/${appointmentId}/reschedule`);
+    }
+    
+    // Get doctor with full availability details
+    const doctor = await Doctor.findById(appointment.doctor._id);
+    
+    // Check if the selected date is marked as unavailable by the doctor
+    const appointmentDateObj = new Date(appointmentDate);
+    appointmentDateObj.setHours(0, 0, 0, 0);
+    
+    if (doctor.availability && doctor.availability.unavailableDates) {
+        const isUnavailable = doctor.availability.unavailableDates.some(unavailableDate => {
+            const unavailableDateObj = new Date(unavailableDate.date);
+            unavailableDateObj.setHours(0, 0, 0, 0);
+            return unavailableDateObj.getTime() === appointmentDateObj.getTime();
+        });
+        
+        if (isUnavailable) {
+            req.flash('error', 'The doctor is not available on the selected date. Please choose a different date.');
+            return res.redirect(`/patient/appointments/${appointmentId}/reschedule`);
+        }
     }
     
     // Check if the new slot is available
