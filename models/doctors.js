@@ -246,8 +246,31 @@ const DoctorSchema = new Schema({
 // Generate unique doctor ID
 DoctorSchema.pre('save', async function(next) {
     if (!this.doctorId) {
-        const count = await mongoose.model('Doctor').countDocuments();
-        this.doctorId = `DOC${String(count + 1).padStart(6, '0')}`;
+        // Keep trying until we find a unique ID
+        let isUnique = false;
+        let doctorId;
+        let attempts = 0;
+        const maxAttempts = 100;
+        
+        while (!isUnique && attempts < maxAttempts) {
+            const count = await mongoose.model('Doctor').countDocuments();
+            const randomSuffix = Math.floor(Math.random() * 1000); // Add randomness
+            doctorId = `DOC${String(count + 1 + randomSuffix).padStart(6, '0')}`;
+            
+            // Check if this ID already exists
+            const existing = await mongoose.model('Doctor').findOne({ doctorId: doctorId });
+            if (!existing) {
+                isUnique = true;
+            }
+            attempts++;
+        }
+        
+        if (!isUnique) {
+            // Fallback: use timestamp-based ID
+            doctorId = `DOC${Date.now().toString().slice(-6)}`;
+        }
+        
+        this.doctorId = doctorId;
     }
     next();
 });

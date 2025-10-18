@@ -293,10 +293,21 @@ async function handlePortalSignup(req, res, portal) {
         
         // Update profile with actual user reference and save
         profile.user = registeredUser._id;
-        await profile.save();
         
-        console.log(`${portal} user created:`, registeredUser);
-        console.log(`${portal} profile created:`, profile);
+        try {
+            await profile.save();
+            console.log(`✅ ${portal} user created:`, registeredUser.email);
+            console.log(`✅ ${portal} profile created successfully for:`, firstName, lastName);
+        } catch (profileSaveError) {
+            console.error(`❌ PROFILE SAVE ERROR for ${portal}:`, profileSaveError.message);
+            console.error('Full error:', profileSaveError);
+            
+            // Delete the user if profile creation failed
+            await User.findByIdAndDelete(registeredUser._id);
+            
+            req.flash('error', `Profile creation failed: ${profileSaveError.message}. Please try again.`);
+            return res.redirect(`/${portal}/signup`);
+        }
         
         // For doctors, don't auto-login - they need admin verification first
         if (portal === 'doctor') {
@@ -318,7 +329,12 @@ async function handlePortalSignup(req, res, portal) {
         });
         
     } catch (error) {
-        console.error("Signup error:", error);
+        console.error("❌ SIGNUP ERROR:", error);
+        console.error("Error name:", error.name);
+        console.error("Error message:", error.message);
+        if (error.stack) {
+            console.error("Stack trace:", error.stack);
+        }
         
         // Handle specific mongoose validation errors
         if (error.name === 'UserExistsError') {
