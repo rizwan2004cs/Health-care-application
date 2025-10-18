@@ -298,12 +298,6 @@
                                     <a href="/doctor/appointments/<%= appointment._id %>" class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
                                         <i class="fas fa-eye"></i> View
                                     </a>
-                                    
-                                    <% if (appointment.status === 'scheduled' || appointment.status === 'confirmed') { %>
-                                        <button class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="completeAppointment('<%= appointment._id %>')">
-                                            <i class="fas fa-check"></i> Complete
-                                        </button>
-                                    <% } %>
                                 </div>
                             </div>
                         </div>
@@ -374,13 +368,6 @@
                 });
             });
         });
-        
-        // Complete appointment
-        function completeAppointment(appointmentId) {
-            if (confirm('Mark this appointment as completed?')) {
-                window.location.href = `/doctor/appointments/${appointmentId}/complete`;
-            }
-        }
     </script>
 </body>
 </html>
